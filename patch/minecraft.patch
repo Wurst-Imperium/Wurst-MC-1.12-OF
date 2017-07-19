@@ -1,6 +1,6 @@
-From 2243e1c7af7bc4299b9efd157c9e083db3f527a7 Mon Sep 17 00:00:00 2001
+From efc3e8f60a46bc28bc7c1a56f2aa460001d332e8 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Sun, 9 Jul 2017 16:11:38 +0200
+Date: Wed, 19 Jul 2017 07:17:29 +0200
 Subject: [PATCH] mod
 
 ---
@@ -16,7 +16,7 @@ Subject: [PATCH] mod
  net/minecraft/client/gui/GuiButtonImage.java       |   2 +-
  net/minecraft/client/gui/GuiButtonLanguage.java    |   2 +-
  net/minecraft/client/gui/GuiButtonToggle.java      |   2 +-
- .../GuiClickableScrolledSelectionListProxy.java    |   4 +-
+ .../GuiClickableScrolledSelectionListProxy.java    |   7 +-
  net/minecraft/client/gui/GuiCreateFlatWorld.java   |   2 +-
  .../client/gui/GuiCustomizeWorldScreen.java        |   4 +-
  net/minecraft/client/gui/GuiDisconnected.java      |  80 +++++++
@@ -26,32 +26,32 @@ Subject: [PATCH] mod
  net/minecraft/client/gui/GuiIngameMenu.java        |  49 +++-
  net/minecraft/client/gui/GuiKeyBindingList.java    |   4 +-
  net/minecraft/client/gui/GuiLanguage.java          |   2 +-
- net/minecraft/client/gui/GuiListExtended.java      |   2 +-
+ net/minecraft/client/gui/GuiListExtended.java      |   5 +-
  net/minecraft/client/gui/GuiLockIconButton.java    |   2 +-
  net/minecraft/client/gui/GuiMainMenu.java          |  30 ++-
  net/minecraft/client/gui/GuiMemoryErrorScreen.java |   3 +-
  net/minecraft/client/gui/GuiMerchant.java          |   2 +-
  net/minecraft/client/gui/GuiMultiplayer.java       |  85 ++++++-
  net/minecraft/client/gui/GuiNewChat.java           |  10 +
- net/minecraft/client/gui/GuiOptionsRowList.java    |   4 +-
+ net/minecraft/client/gui/GuiOptionsRowList.java    |   8 +-
  net/minecraft/client/gui/GuiPageButtonList.java    |   2 +-
  net/minecraft/client/gui/GuiScreen.java            |   8 +-
  net/minecraft/client/gui/GuiScreenBook.java        |  63 ++++-
  .../client/gui/GuiScreenCustomizePresets.java      |   2 +-
  net/minecraft/client/gui/GuiScreenServerList.java  |   6 +
- .../gui/GuiSimpleScrolledSelectionListProxy.java   |   2 +-
- net/minecraft/client/gui/GuiSlot.java              |   4 +-
- net/minecraft/client/gui/GuiSlotRealmsProxy.java   |   2 +-
+ .../gui/GuiSimpleScrolledSelectionListProxy.java   |   5 +-
+ net/minecraft/client/gui/GuiSlot.java              |   6 +-
+ net/minecraft/client/gui/GuiSlotRealmsProxy.java   |   5 +-
  net/minecraft/client/gui/GuiSnooper.java           |   2 +-
  .../client/gui/ServerListEntryNormal.java          |  13 +-
  net/minecraft/client/gui/achievement/GuiStats.java |  23 +-
  net/minecraft/client/gui/inventory/GuiBeacon.java  |   2 +-
- net/minecraft/client/gui/inventory/GuiChest.java   |  76 +++++++
+ net/minecraft/client/gui/inventory/GuiChest.java   |  76 ++++++
  .../client/gui/inventory/GuiContainer.java         |   4 +
  .../client/gui/inventory/GuiEditSign.java          |  15 ++
  .../client/gui/recipebook/GuiButtonRecipe.java     |   2 +-
  .../client/gui/recipebook/GuiButtonRecipeTab.java  |   2 +-
- .../client/gui/recipebook/GuiRecipeBook.java       |   4 +-
+ .../client/gui/recipebook/GuiRecipeBook.java       |   6 +-
  .../client/gui/recipebook/GuiRecipeOverlay.java    |   4 +-
  .../client/gui/recipebook/RecipeBookPage.java      |   6 +-
  .../client/multiplayer/GuiConnecting.java          |  10 +-
@@ -72,7 +72,7 @@ Subject: [PATCH] mod
  net/minecraft/client/resources/SkinManager.java    |   4 +
  net/minecraft/client/settings/KeyBinding.java      |   2 +-
  net/minecraft/crash/CrashReport.java               |  11 +-
- net/minecraft/entity/Entity.java                   | 253 +++++++++++----------
+ net/minecraft/entity/Entity.java                   | 257 +++++++++++----------
  net/minecraft/entity/EntityLiving.java             |   4 +-
  net/minecraft/entity/EntityLivingBase.java         |  24 +-
  net/minecraft/entity/item/EntityMinecart.java      |   2 +-
@@ -93,7 +93,7 @@ Subject: [PATCH] mod
  net/minecraft/util/Timer.java                      |  16 +-
  net/minecraft/world/World.java                     |  15 ++
  shadersmod/client/GuiSlotShaders.java              |   2 +-
- 89 files changed, 1166 insertions(+), 300 deletions(-)
+ 89 files changed, 1178 insertions(+), 312 deletions(-)
 
 diff --git a/net/minecraft/block/Block.java b/net/minecraft/block/Block.java
 index 7e18f72..f8aca5c 100644
@@ -853,19 +853,22 @@ index f03841e..8f7136c 100644
  	{
  		if(this.visible)
 diff --git a/net/minecraft/client/gui/GuiClickableScrolledSelectionListProxy.java b/net/minecraft/client/gui/GuiClickableScrolledSelectionListProxy.java
-index 53c2386..b144984 100644
+index 53c2386..99ff64b 100644
 --- a/net/minecraft/client/gui/GuiClickableScrolledSelectionListProxy.java
 +++ b/net/minecraft/client/gui/GuiClickableScrolledSelectionListProxy.java
-@@ -47,7 +47,7 @@ public class GuiClickableScrolledSelectionListProxy extends GuiSlot
+@@ -47,9 +47,8 @@ public class GuiClickableScrolledSelectionListProxy extends GuiSlot
  		this.proxy.renderBackground();
  	}
  	
 -	protected void func_192637_a(int p_192637_1_, int p_192637_2_,
-+	protected void drawSlot(int p_192637_1_, int p_192637_2_,
- 		int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
- 		float p_192637_7_)
+-		int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
+-		float p_192637_7_)
++	protected void drawSlot(int p_192637_1_, int p_192637_2_, int p_192637_3_,
++		int p_192637_4_, int p_192637_5_, int p_192637_6_, float p_192637_7_)
  	{
-@@ -121,7 +121,7 @@ public class GuiClickableScrolledSelectionListProxy extends GuiSlot
+ 		this.proxy.renderItem(p_192637_1_, p_192637_2_, p_192637_3_,
+ 			p_192637_4_, p_192637_5_, p_192637_6_);
+@@ -121,7 +120,7 @@ public class GuiClickableScrolledSelectionListProxy extends GuiSlot
  				this.renderSelected(this.width, k, l, Tezzelator.instance);
  			}
  			
@@ -1251,18 +1254,21 @@ index 9c75bc2..5c105c7 100644
  			float p_192637_7_)
  		{
 diff --git a/net/minecraft/client/gui/GuiListExtended.java b/net/minecraft/client/gui/GuiListExtended.java
-index 368efba..7f4371a 100644
+index 368efba..2d8cef6 100644
 --- a/net/minecraft/client/gui/GuiListExtended.java
 +++ b/net/minecraft/client/gui/GuiListExtended.java
-@@ -29,7 +29,7 @@ public abstract class GuiListExtended extends GuiSlot
+@@ -29,9 +29,8 @@ public abstract class GuiListExtended extends GuiSlot
  	protected void drawBackground()
  	{}
  	
 -	protected void func_192637_a(int p_192637_1_, int p_192637_2_,
-+	protected void drawSlot(int p_192637_1_, int p_192637_2_,
- 		int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
- 		float p_192637_7_)
+-		int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
+-		float p_192637_7_)
++	protected void drawSlot(int p_192637_1_, int p_192637_2_, int p_192637_3_,
++		int p_192637_4_, int p_192637_5_, int p_192637_6_, float p_192637_7_)
  	{
+ 		this.getListEntry(p_192637_1_).func_192634_a(p_192637_1_, p_192637_2_,
+ 			p_192637_3_, this.getListWidth(), p_192637_4_, p_192637_5_,
 diff --git a/net/minecraft/client/gui/GuiLockIconButton.java b/net/minecraft/client/gui/GuiLockIconButton.java
 index d06ec24..2b1f8c5 100644
 --- a/net/minecraft/client/gui/GuiLockIconButton.java
@@ -1572,26 +1578,29 @@ index 5d17840..a4b76bb 100644
  			this.mc.ingameGUI.getUpdateCounter(), false);
  		LOGGER.info("[CHAT] {}", (Object)chatComponent.getUnformattedText()
 diff --git a/net/minecraft/client/gui/GuiOptionsRowList.java b/net/minecraft/client/gui/GuiOptionsRowList.java
-index 75921fc..70a2e8d 100644
+index 75921fc..68afa51 100644
 --- a/net/minecraft/client/gui/GuiOptionsRowList.java
 +++ b/net/minecraft/client/gui/GuiOptionsRowList.java
-@@ -94,14 +94,14 @@ public class GuiOptionsRowList extends GuiListExtended
+@@ -94,15 +94,15 @@ public class GuiOptionsRowList extends GuiListExtended
  			if(this.buttonA != null)
  			{
  				this.buttonA.yPosition = p_192634_3_;
 -				this.buttonA.func_191745_a(this.client, p_192634_6_,
-+				this.buttonA.drawButton(this.client, p_192634_6_,
- 					p_192634_7_, p_192634_9_);
+-					p_192634_7_, p_192634_9_);
++				this.buttonA.drawButton(this.client, p_192634_6_, p_192634_7_,
++					p_192634_9_);
  			}
  			
  			if(this.buttonB != null)
  			{
  				this.buttonB.yPosition = p_192634_3_;
 -				this.buttonB.func_191745_a(this.client, p_192634_6_,
-+				this.buttonB.drawButton(this.client, p_192634_6_,
- 					p_192634_7_, p_192634_9_);
+-					p_192634_7_, p_192634_9_);
++				this.buttonB.drawButton(this.client, p_192634_6_, p_192634_7_,
++					p_192634_9_);
  			}
  		}
+ 		
 diff --git a/net/minecraft/client/gui/GuiPageButtonList.java b/net/minecraft/client/gui/GuiPageButtonList.java
 index bc76d47..0dc9023 100644
 --- a/net/minecraft/client/gui/GuiPageButtonList.java
@@ -1795,20 +1804,23 @@ index 398fdba..a553673 100644
  			}
  		}
 diff --git a/net/minecraft/client/gui/GuiSimpleScrolledSelectionListProxy.java b/net/minecraft/client/gui/GuiSimpleScrolledSelectionListProxy.java
-index 776e73f..62e894a 100644
+index 776e73f..8ef6519 100644
 --- a/net/minecraft/client/gui/GuiSimpleScrolledSelectionListProxy.java
 +++ b/net/minecraft/client/gui/GuiSimpleScrolledSelectionListProxy.java
-@@ -50,7 +50,7 @@ public class GuiSimpleScrolledSelectionListProxy extends GuiSlot
+@@ -50,9 +50,8 @@ public class GuiSimpleScrolledSelectionListProxy extends GuiSlot
  		this.realmsScrolledSelectionList.renderBackground();
  	}
  	
 -	protected void func_192637_a(int p_192637_1_, int p_192637_2_,
-+	protected void drawSlot(int p_192637_1_, int p_192637_2_,
- 		int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
- 		float p_192637_7_)
+-		int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
+-		float p_192637_7_)
++	protected void drawSlot(int p_192637_1_, int p_192637_2_, int p_192637_3_,
++		int p_192637_4_, int p_192637_5_, int p_192637_6_, float p_192637_7_)
  	{
+ 		this.realmsScrolledSelectionList.renderItem(p_192637_1_, p_192637_2_,
+ 			p_192637_3_, p_192637_4_, p_192637_5_, p_192637_6_);
 diff --git a/net/minecraft/client/gui/GuiSlot.java b/net/minecraft/client/gui/GuiSlot.java
-index afe1f46..f39c1bb 100644
+index afe1f46..7fb52f9 100644
 --- a/net/minecraft/client/gui/GuiSlot.java
 +++ b/net/minecraft/client/gui/GuiSlot.java
 @@ -137,7 +137,7 @@ public abstract class GuiSlot
@@ -1820,28 +1832,33 @@ index afe1f46..f39c1bb 100644
  		int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
  		float p_192637_7_);
  	
-@@ -537,7 +537,7 @@ public abstract class GuiSlot
+@@ -537,8 +537,8 @@ public abstract class GuiSlot
  			
  			if(k >= this.top - this.slotHeight && k <= this.bottom)
  			{
 -				this.func_192637_a(j, p_192638_1_, k, l, p_192638_3_,
-+				this.drawSlot(j, p_192638_1_, k, l, p_192638_3_,
- 					p_192638_4_, p_192638_5_);
+-					p_192638_4_, p_192638_5_);
++				this.drawSlot(j, p_192638_1_, k, l, p_192638_3_, p_192638_4_,
++					p_192638_5_);
  			}
  		}
+ 	}
 diff --git a/net/minecraft/client/gui/GuiSlotRealmsProxy.java b/net/minecraft/client/gui/GuiSlotRealmsProxy.java
-index 3737710..bb04f77 100644
+index 3737710..eb56dcb 100644
 --- a/net/minecraft/client/gui/GuiSlotRealmsProxy.java
 +++ b/net/minecraft/client/gui/GuiSlotRealmsProxy.java
-@@ -43,7 +43,7 @@ public class GuiSlotRealmsProxy extends GuiSlot
+@@ -43,9 +43,8 @@ public class GuiSlotRealmsProxy extends GuiSlot
  		this.selectionList.renderBackground();
  	}
  	
 -	protected void func_192637_a(int p_192637_1_, int p_192637_2_,
-+	protected void drawSlot(int p_192637_1_, int p_192637_2_,
- 		int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
- 		float p_192637_7_)
+-		int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
+-		float p_192637_7_)
++	protected void drawSlot(int p_192637_1_, int p_192637_2_, int p_192637_3_,
++		int p_192637_4_, int p_192637_5_, int p_192637_6_, float p_192637_7_)
  	{
+ 		this.selectionList.renderItem(p_192637_1_, p_192637_2_, p_192637_3_,
+ 			p_192637_4_, p_192637_5_, p_192637_6_);
 diff --git a/net/minecraft/client/gui/GuiSnooper.java b/net/minecraft/client/gui/GuiSnooper.java
 index 5771d0f..091357a 100644
 --- a/net/minecraft/client/gui/GuiSnooper.java
@@ -2178,7 +2195,7 @@ index 4b02683..0f98825 100644
  	{
  		if(this.visible)
 diff --git a/net/minecraft/client/gui/recipebook/GuiRecipeBook.java b/net/minecraft/client/gui/recipebook/GuiRecipeBook.java
-index 9087650..32b1b6c 100644
+index 9087650..6f1347d 100644
 --- a/net/minecraft/client/gui/recipebook/GuiRecipeBook.java
 +++ b/net/minecraft/client/gui/recipebook/GuiRecipeBook.java
 @@ -283,11 +283,11 @@ public class GuiRecipeBook extends Gui implements IRecipeUpdateListener
@@ -2186,8 +2203,9 @@ index 9087650..32b1b6c 100644
  			for(GuiButtonRecipeTab guibuttonrecipetab : this.field_193018_j)
  			{
 -				guibuttonrecipetab.func_191745_a(this.field_191888_F,
-+				guibuttonrecipetab.drawButton(this.field_191888_F,
- 					p_191861_1_, p_191861_2_, p_191861_3_);
+-					p_191861_1_, p_191861_2_, p_191861_3_);
++				guibuttonrecipetab.drawButton(this.field_191888_F, p_191861_1_,
++					p_191861_2_, p_191861_3_);
  			}
  			
 -			this.field_193960_m.func_191745_a(this.field_191888_F, p_191861_1_,
@@ -2974,7 +2992,7 @@ index 5407828..fc0e8ce 100644
  		Reflector.call(Reflector.CoreModManager_onCrash, stringbuilder);
  		stringbuilder.append("// ");
 diff --git a/net/minecraft/entity/Entity.java b/net/minecraft/entity/Entity.java
-index b9d1e4d..8f605b0 100644
+index b9d1e4d..600d668 100644
 --- a/net/minecraft/entity/Entity.java
 +++ b/net/minecraft/entity/Entity.java
 @@ -28,6 +28,7 @@ import net.minecraft.block.material.EnumPushReaction;
@@ -3107,7 +3125,7 @@ index b9d1e4d..8f605b0 100644
  					{
  						return;
  					}
-@@ -828,163 +842,157 @@ public abstract class Entity implements ICommandSender
+@@ -828,163 +842,161 @@ public abstract class Entity implements ICommandSender
  			if(this.isInWeb)
  			{
  				this.isInWeb = false;
@@ -3131,11 +3149,15 @@ index b9d1e4d..8f605b0 100644
  			
 -			if((x == MoverType.SELF || x == MoverType.PLAYER) && this.onGround
 -				&& this.isSneaking() && this instanceof EntityPlayer)
++			// TODO: Client
 +			if((moverType == MoverType.SELF || moverType == MoverType.PLAYER)
-+				&& this.onGround && this.isSneaking()
++				&& this.onGround
++				&& (this.isSneaking()
++					|| WurstClient.INSTANCE.mods.safeWalkMod.isActive())
 +				&& this instanceof EntityPlayer)
  			{
 -				for(double d5 = 0.05D; p_70091_2_ != 0.0D
++				
 +				for(double d5 = 0.05D; x != 0.0D
  					&& this.world
  						.getCollisionBoxes(this,
@@ -3338,7 +3360,7 @@ index b9d1e4d..8f605b0 100644
  				int j1 = 0;
  				
  				for(int k1 = list.size(); j1 < k1; ++j1)
-@@ -1015,7 +1023,7 @@ public abstract class Entity implements ICommandSender
+@@ -1015,7 +1027,7 @@ public abstract class Entity implements ICommandSender
  				
  				axisalignedbb2 = axisalignedbb2.offset(0.0D, 0.0D, d19);
  				AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
@@ -3347,7 +3369,7 @@ index b9d1e4d..8f605b0 100644
  				int l2 = 0;
  				
  				for(int i3 = list.size(); l2 < i3; ++l2)
-@@ -1050,15 +1058,15 @@ public abstract class Entity implements ICommandSender
+@@ -1050,15 +1062,15 @@ public abstract class Entity implements ICommandSender
  				
  				if(d23 > d9)
  				{
@@ -3369,7 +3391,7 @@ index b9d1e4d..8f605b0 100644
  					this.setEntityBoundingBox(axisalignedbb4);
  				}
  				
-@@ -1066,19 +1074,18 @@ public abstract class Entity implements ICommandSender
+@@ -1066,19 +1078,18 @@ public abstract class Entity implements ICommandSender
  				
  				for(int k4 = list.size(); j4 < k4; ++j4)
  				{
@@ -3396,7 +3418,7 @@ index b9d1e4d..8f605b0 100644
  					this.setEntityBoundingBox(axisalignedbb1);
  				}
  			}
-@@ -1086,8 +1093,8 @@ public abstract class Entity implements ICommandSender
+@@ -1086,8 +1097,8 @@ public abstract class Entity implements ICommandSender
  			this.world.theProfiler.endSection();
  			this.world.theProfiler.startSection("rest");
  			this.resetPositionToBB();
@@ -3407,7 +3429,7 @@ index b9d1e4d..8f605b0 100644
  			this.onGround = this.isCollidedVertically && d3 < 0.0D;
  			this.isCollided =
  				this.isCollidedHorizontally || this.isCollidedVertically;
-@@ -1111,22 +1118,21 @@ public abstract class Entity implements ICommandSender
+@@ -1111,22 +1122,21 @@ public abstract class Entity implements ICommandSender
  				}
  			}
  			
@@ -3434,7 +3456,7 @@ index b9d1e4d..8f605b0 100644
  			{
  				block.onLanded(this.world, this);
  			}
-@@ -2709,9 +2715,14 @@ public abstract class Entity implements ICommandSender
+@@ -2709,9 +2719,14 @@ public abstract class Entity implements ICommandSender
  	 */
  	public void setVelocity(double x, double y, double z)
  	{
