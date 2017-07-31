@@ -1,6 +1,6 @@
-From 3353902c15070c604b2875cb9695167287ba99e8 Mon Sep 17 00:00:00 2001
+From 1ceca03c8bd0752c326b8164f3ec1a1bfc4c25b9 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Wed, 19 Jul 2017 11:51:33 +0200
+Date: Mon, 31 Jul 2017 17:44:37 +0200
 Subject: [PATCH] mod
 
 ---
@@ -272,7 +272,7 @@ index 2c114d0..3f3d8e5 100644
  		entityIn.motionZ *= 0.4D;
  	}
 diff --git a/net/minecraft/client/Minecraft.java b/net/minecraft/client/Minecraft.java
-index f6490ac..2b35fde 100644
+index f6490ac..1d91b60 100644
 --- a/net/minecraft/client/Minecraft.java
 +++ b/net/minecraft/client/Minecraft.java
 @@ -162,12 +162,22 @@ import net.minecraft.world.chunk.storage.AnvilSaveConverter;
@@ -474,7 +474,7 @@ index f6490ac..2b35fde 100644
  				if(this.currentScreen == null)
  				{
 +					// TODO: Client
-+					WurstClient.INSTANCE.keybinds.onKeyPress();
++					WurstClient.INSTANCE.getKeybindProcessor().onKeyPress();
 +					
  					if(i == 1)
  					{
