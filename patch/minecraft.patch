@@ -1,6 +1,6 @@
-From 1ceca03c8bd0752c326b8164f3ec1a1bfc4c25b9 Mon Sep 17 00:00:00 2001
+From 3b4636f79616ffee2e78abe998187da08fb70395 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Mon, 31 Jul 2017 17:44:37 +0200
+Date: Wed, 2 Aug 2017 22:29:20 +0200
 Subject: [PATCH] mod
 
 ---
@@ -31,7 +31,7 @@ Subject: [PATCH] mod
  net/minecraft/client/gui/GuiMainMenu.java          |  30 ++-
  net/minecraft/client/gui/GuiMemoryErrorScreen.java |   3 +-
  net/minecraft/client/gui/GuiMerchant.java          |   2 +-
- net/minecraft/client/gui/GuiMultiplayer.java       |  85 ++++++-
+ net/minecraft/client/gui/GuiMultiplayer.java       |  92 +++++++-
  net/minecraft/client/gui/GuiNewChat.java           |  10 +
  net/minecraft/client/gui/GuiOptionsRowList.java    |   8 +-
  net/minecraft/client/gui/GuiPageButtonList.java    |   2 +-
@@ -43,7 +43,7 @@ Subject: [PATCH] mod
  net/minecraft/client/gui/GuiSlot.java              |   6 +-
  net/minecraft/client/gui/GuiSlotRealmsProxy.java   |   5 +-
  net/minecraft/client/gui/GuiSnooper.java           |   2 +-
- .../client/gui/ServerListEntryNormal.java          |  13 +-
+ .../client/gui/ServerListEntryNormal.java          |  16 +-
  net/minecraft/client/gui/achievement/GuiStats.java |  23 +-
  net/minecraft/client/gui/inventory/GuiBeacon.java  |   2 +-
  net/minecraft/client/gui/inventory/GuiChest.java   |  76 ++++++
@@ -83,6 +83,7 @@ Subject: [PATCH] mod
  net/minecraft/entity/player/EntityPlayerMP.java    |   2 +-
  net/minecraft/item/ItemSword.java                  |   2 +-
  net/minecraft/item/ItemTool.java                   |   2 +-
+ net/minecraft/network/EnumConnectionState.java     |  19 ++
  net/minecraft/network/NetworkManager.java          |  18 ++
  net/minecraft/potion/PotionEffect.java             |   5 +-
  net/minecraft/realms/RealmsButton.java             |   2 +-
@@ -93,7 +94,7 @@ Subject: [PATCH] mod
  net/minecraft/util/Timer.java                      |  16 +-
  net/minecraft/world/World.java                     |  15 ++
  shadersmod/client/GuiSlotShaders.java              |   2 +-
- 89 files changed, 1183 insertions(+), 313 deletions(-)
+ 90 files changed, 1212 insertions(+), 313 deletions(-)
 
 diff --git a/net/minecraft/block/Block.java b/net/minecraft/block/Block.java
 index 7e18f72..f8aca5c 100644
@@ -1388,14 +1389,15 @@ index 29867d6..1384fda 100644
  		{
  			if(this.visible)
 diff --git a/net/minecraft/client/gui/GuiMultiplayer.java b/net/minecraft/client/gui/GuiMultiplayer.java
-index 46d12ea..4355ea3 100644
+index 46d12ea..a86a2fa 100644
 --- a/net/minecraft/client/gui/GuiMultiplayer.java
 +++ b/net/minecraft/client/gui/GuiMultiplayer.java
-@@ -17,14 +17,19 @@ import net.minecraft.client.network.LanServerDetector;
+@@ -17,14 +17,20 @@ import net.minecraft.client.network.LanServerDetector;
  import net.minecraft.client.network.LanServerInfo;
  import net.minecraft.client.network.ServerPinger;
  import net.minecraft.client.resources.I18n;
 +import net.wurstclient.WurstClient;
++import net.wurstclient.compatibility.Gui1121Mode;
 +import net.wurstclient.gui.multiplayer.GuiCleanUp;
 +import net.wurstclient.gui.multiplayer.GuiServerFinder;
 +import net.wurstclient.hooks.ServerHook;
@@ -1413,7 +1415,7 @@ index 46d12ea..4355ea3 100644
  	private GuiButton btnEditServer;
  	private GuiButton btnSelectServer;
  	private GuiButton btnDeleteServer;
-@@ -95,6 +100,10 @@ public class GuiMultiplayer extends GuiScreen
+@@ -95,6 +101,10 @@ public class GuiMultiplayer extends GuiScreen
  	public void handleMouseInput() throws IOException
  	{
  		super.handleMouseInput();
@@ -1424,7 +1426,7 @@ index 46d12ea..4355ea3 100644
  			this.serverListSelector.handleMouseInput();
  	}
  	
-@@ -117,6 +126,24 @@ public class GuiMultiplayer extends GuiScreen
+@@ -117,6 +127,27 @@ public class GuiMultiplayer extends GuiScreen
  			this.height - 28, 70, 20, I18n.format("selectServer.refresh")));
  		this.buttonList.add(new GuiButton(0, this.width / 2 + 4 + 76,
  			this.height - 28, 75, 20, I18n.format("gui.cancel")));
@@ -1434,8 +1436,11 @@ index 46d12ea..4355ea3 100644
 +		{
 +			this.buttonList.add(new GuiButton(5, this.width / 2 - 154, 10, 100,
 +				20, "Last server"));
-+			// this.buttonList.add(new GuiButton(6, this.width / 2 + 54, 10,
-+			// 100, 20, "???"));
++			this.buttonList
++				.add(new GuiButton(6, this.width / 2 + 54, 10, 100, 20,
++					"1.12.1 Mode: "
++						+ (WurstClient.INSTANCE.options.experimental_mc1121_mode
++							? "ON" : "OFF")));
 +			this.buttonList.add(new GuiButton(10, this.width / 2 - 154 - 104,
 +				this.height - 52, 100, 20, "Import Servers"));
 +			this.buttonList.add(new GuiButton(11, this.width / 2 - 154 - 104,
@@ -1449,7 +1454,7 @@ index 46d12ea..4355ea3 100644
  		this.selectServer(this.serverListSelector.getSelected());
  	}
  	
-@@ -135,6 +162,11 @@ public class GuiMultiplayer extends GuiScreen
+@@ -135,6 +166,11 @@ public class GuiMultiplayer extends GuiScreen
  		}
  		
  		this.oldServerPinger.pingPendingNetworks();
@@ -1461,7 +1466,7 @@ index 46d12ea..4355ea3 100644
  	}
  	
  	/**
-@@ -221,11 +253,29 @@ public class GuiMultiplayer extends GuiScreen
+@@ -221,11 +257,32 @@ public class GuiMultiplayer extends GuiScreen
  			}else if(button.id == 8)
  			{
  				this.refreshServerList();
@@ -1474,6 +1479,9 @@ index 46d12ea..4355ea3 100644
 +			}else if(button.id == 5)
 +				// Last Server
 +				ServerHook.joinLastServer(this);
++			else if(button.id == 6)
++				// 1.12.1 Mode
++				mc.displayGuiScreen(new Gui1121Mode(this));
 +			else if(button.id == 10)
 +				// Import
 +				new Thread(() -> ServerHook.importServers(GuiMultiplayer.this))
@@ -1495,7 +1503,7 @@ index 46d12ea..4355ea3 100644
  	{
  		this.mc.displayGuiScreen(new GuiMultiplayer(this.parentScreen));
  	}
-@@ -319,6 +369,13 @@ public class GuiMultiplayer extends GuiScreen
+@@ -319,6 +376,13 @@ public class GuiMultiplayer extends GuiScreen
  		{
  			if(i >= 0)
  			{
@@ -1509,7 +1517,7 @@ index 46d12ea..4355ea3 100644
  				if(keyCode == 200)
  				{
  					if(isShiftKeyDown())
-@@ -423,8 +480,12 @@ public class GuiMultiplayer extends GuiScreen
+@@ -423,8 +487,12 @@ public class GuiMultiplayer extends GuiScreen
  		this.hoveringText = null;
  		this.drawDefaultBackground();
  		this.serverListSelector.drawScreen(mouseX, mouseY, partialTicks);
@@ -1523,7 +1531,7 @@ index 46d12ea..4355ea3 100644
  		super.drawScreen(mouseX, mouseY, partialTicks);
  		
  		if(this.hoveringText != null)
-@@ -442,6 +503,10 @@ public class GuiMultiplayer extends GuiScreen
+@@ -442,6 +510,10 @@ public class GuiMultiplayer extends GuiScreen
  				: this.serverListSelector
  					.getListEntry(this.serverListSelector.getSelected());
  		
@@ -1534,7 +1542,7 @@ index 46d12ea..4355ea3 100644
  		if(guilistextended$iguilistentry instanceof ServerListEntryNormal)
  		{
  			this.connectToServer(
-@@ -457,9 +522,13 @@ public class GuiMultiplayer extends GuiScreen
+@@ -457,9 +529,13 @@ public class GuiMultiplayer extends GuiScreen
  		}
  	}
  	
@@ -1873,18 +1881,19 @@ index 5771d0f..091357a 100644
  			float p_192637_7_)
  		{
 diff --git a/net/minecraft/client/gui/ServerListEntryNormal.java b/net/minecraft/client/gui/ServerListEntryNormal.java
-index 991c579..f237512 100644
+index 991c579..8b3c5ff 100644
 --- a/net/minecraft/client/gui/ServerListEntryNormal.java
 +++ b/net/minecraft/client/gui/ServerListEntryNormal.java
-@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
+@@ -25,6 +25,8 @@ import net.minecraft.client.renderer.texture.TextureUtil;
  import net.minecraft.client.resources.I18n;
  import net.minecraft.util.ResourceLocation;
  import net.minecraft.util.text.TextFormatting;
++import net.wurstclient.WurstClient;
 +import net.wurstclient.compatibility.WMinecraft;
  
  public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
  {
-@@ -44,7 +45,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
+@@ -44,7 +46,7 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
  	private DynamicTexture icon;
  	private long lastClickTime;
  	
@@ -1893,19 +1902,21 @@ index 991c579..f237512 100644
  		ServerData serverIn)
  	{
  		this.owner = p_i45048_1_;
-@@ -93,7 +94,10 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
+@@ -93,7 +95,12 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
  		
  		boolean flag = this.server.version > 335;
  		boolean flag1 = this.server.version < 335;
 -		boolean flag2 = flag || flag1;
 +		
 +		// TODO: Client
-+		boolean flag2 = !WMinecraft.PROTOCOLS.containsKey(server.version);
++		boolean flag2 = WurstClient.INSTANCE.options.experimental_mc1121_mode
++			? server.version != 337
++			: !WMinecraft.PROTOCOLS.containsKey(server.version);
 +		
  		this.mc.fontRendererObj.drawString(this.server.serverName,
  			p_192634_2_ + 32 + 3, p_192634_3_ + 1, 16777215);
  		List<String> list = this.mc.fontRendererObj.listFormattedStringToWidth(
-@@ -107,8 +111,11 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
+@@ -107,8 +114,11 @@ public class ServerListEntryNormal implements GuiListExtended.IGuiListEntry
  				8421504);
  		}
  		
@@ -3725,6 +3736,59 @@ index 0b8d01d..84b977d 100644
  	protected float attackSpeed;
  	
  	/** The material this tool is made from. */
+diff --git a/net/minecraft/network/EnumConnectionState.java b/net/minecraft/network/EnumConnectionState.java
+index 60be433..9965c2f 100644
+--- a/net/minecraft/network/EnumConnectionState.java
++++ b/net/minecraft/network/EnumConnectionState.java
+@@ -22,6 +22,9 @@ import net.minecraft.network.status.client.CPacketPing;
+ import net.minecraft.network.status.client.CPacketServerQuery;
+ import net.minecraft.network.status.server.SPacketPong;
+ import net.minecraft.network.status.server.SPacketServerInfo;
++import net.wurstclient.WurstClient;
++import net.wurstclient.compatibility.CPacketSomethingNew;
++import net.wurstclient.compatibility.SPacketSomethingNew;
+ 
+ public enum EnumConnectionState
+ {
+@@ -121,6 +124,12 @@ public enum EnumConnectionState
+ 				SPacketMoveVehicle.class);
+ 			this.registerPacket(EnumPacketDirection.CLIENTBOUND,
+ 				SPacketSignEditorOpen.class);
++			
++			// TODO: Client
++			if(WurstClient.INSTANCE.options.experimental_mc1121_mode)
++				this.registerPacket(EnumPacketDirection.CLIENTBOUND,
++					SPacketSomethingNew.class);
++			
+ 			this.registerPacket(EnumPacketDirection.CLIENTBOUND,
+ 				SPacketPlayerAbilities.class);
+ 			this.registerPacket(EnumPacketDirection.CLIENTBOUND,
+@@ -195,8 +204,12 @@ public enum EnumConnectionState
+ 				SPacketEntityEffect.class);
+ 			this.registerPacket(EnumPacketDirection.SERVERBOUND,
+ 				CPacketConfirmTeleport.class);
++			
++			// TODO: Client
++			if(!WurstClient.INSTANCE.options.experimental_mc1121_mode)
+ 				this.registerPacket(EnumPacketDirection.SERVERBOUND,
+ 					CPacketRecipePlacement.class);
++			
+ 			this.registerPacket(EnumPacketDirection.SERVERBOUND,
+ 				CPacketTabComplete.class);
+ 			this.registerPacket(EnumPacketDirection.SERVERBOUND,
+@@ -231,6 +244,12 @@ public enum EnumConnectionState
+ 				CPacketVehicleMove.class);
+ 			this.registerPacket(EnumPacketDirection.SERVERBOUND,
+ 				CPacketSteerBoat.class);
++			
++			// TODO: Client
++			if(WurstClient.INSTANCE.options.experimental_mc1121_mode)
++				this.registerPacket(EnumPacketDirection.SERVERBOUND,
++					CPacketSomethingNew.class);
++			
+ 			this.registerPacket(EnumPacketDirection.SERVERBOUND,
+ 				CPacketPlayerAbilities.class);
+ 			this.registerPacket(EnumPacketDirection.SERVERBOUND,
 diff --git a/net/minecraft/network/NetworkManager.java b/net/minecraft/network/NetworkManager.java
 index 44dec30..e449f2e 100644
 --- a/net/minecraft/network/NetworkManager.java
