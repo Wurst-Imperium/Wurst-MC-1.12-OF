@@ -1,6 +1,6 @@
-From 3b4636f79616ffee2e78abe998187da08fb70395 Mon Sep 17 00:00:00 2001
+From fc8b1e72a31311f92deb58f890a3aa0011f23557 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Wed, 2 Aug 2017 22:29:20 +0200
+Date: Sat, 5 Aug 2017 15:47:26 +0200
 Subject: [PATCH] mod
 
 ---
@@ -1881,7 +1881,7 @@ index 5771d0f..091357a 100644
  			float p_192637_7_)
  		{
 diff --git a/net/minecraft/client/gui/ServerListEntryNormal.java b/net/minecraft/client/gui/ServerListEntryNormal.java
-index 991c579..8b3c5ff 100644
+index 991c579..7cb5c1f 100644
 --- a/net/minecraft/client/gui/ServerListEntryNormal.java
 +++ b/net/minecraft/client/gui/ServerListEntryNormal.java
 @@ -25,6 +25,8 @@ import net.minecraft.client.renderer.texture.TextureUtil;
@@ -1910,7 +1910,7 @@ index 991c579..8b3c5ff 100644
 +		
 +		// TODO: Client
 +		boolean flag2 = WurstClient.INSTANCE.options.experimental_mc1121_mode
-+			? server.version != 337
++			? server.version != 338
 +			: !WMinecraft.PROTOCOLS.containsKey(server.version);
 +		
  		this.mc.fontRendererObj.drawString(this.server.serverName,
