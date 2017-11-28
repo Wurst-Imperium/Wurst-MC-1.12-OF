@@ -1,6 +1,6 @@
-From cab45651f5227d78316d32c147f263c5c5e30d3a Mon Sep 17 00:00:00 2001
+From e25a73a4a8546156daf86f295682e572c6e0e4f0 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Sun, 15 Oct 2017 14:21:40 +0200
+Date: Tue, 28 Nov 2017 15:44:32 +0100
 Subject: [PATCH] mod
 
 ---
@@ -55,7 +55,7 @@ Subject: [PATCH] mod
  .../client/gui/recipebook/GuiRecipeOverlay.java    |   4 +-
  .../client/gui/recipebook/RecipeBookPage.java      |   6 +-
  .../client/multiplayer/GuiConnecting.java          |  10 +-
- .../client/multiplayer/PlayerControllerMP.java     |  25 +-
+ .../client/multiplayer/PlayerControllerMP.java     |  27 ++-
  net/minecraft/client/multiplayer/ServerList.java   |   6 +
  .../client/network/NetHandlerPlayClient.java       |  25 +-
  .../client/network/NetworkPlayerInfo.java          |   8 +
@@ -95,7 +95,7 @@ Subject: [PATCH] mod
  net/minecraft/util/Timer.java                      |  16 +-
  net/minecraft/world/World.java                     |  15 ++
  shadersmod/client/GuiSlotShaders.java              |   2 +-
- 91 files changed, 1251 insertions(+), 313 deletions(-)
+ 91 files changed, 1252 insertions(+), 314 deletions(-)
 
 diff --git a/net/minecraft/block/Block.java b/net/minecraft/block/Block.java
 index 7e18f72..f8aca5c 100644
@@ -2312,7 +2312,7 @@ index 45c32ea..ec8519c 100644
  						.sendPacket(new CPacketLoginStart(
  							GuiConnecting.this.mc.getSession().getProfile()));
 diff --git a/net/minecraft/client/multiplayer/PlayerControllerMP.java b/net/minecraft/client/multiplayer/PlayerControllerMP.java
-index 7f4a03c..e39b5e9 100644
+index 7f4a03c..71bf6d0 100644
 --- a/net/minecraft/client/multiplayer/PlayerControllerMP.java
 +++ b/net/minecraft/client/multiplayer/PlayerControllerMP.java
 @@ -36,6 +36,7 @@ import net.minecraft.util.math.RayTraceResult;
@@ -2332,6 +2332,15 @@ index 7f4a03c..e39b5e9 100644
  	
  	/**
  	 * Tick counter, when it hits 4 it resets back to 0 and plays the step sound
+@@ -61,7 +62,7 @@ public class PlayerControllerMP
+ 	private int blockHitDelay;
+ 	
+ 	/** Tells if the player is hitting a block */
+-	private boolean isHittingBlock;
++	public boolean isHittingBlock;
+ 	
+ 	/** Current game type for the player */
+ 	private GameType currentGameType = GameType.SURVIVAL;
 @@ -248,7 +249,11 @@ public class PlayerControllerMP
  					CPacketPlayerDigging.Action.START_DESTROY_BLOCK, loc,
  					face));
