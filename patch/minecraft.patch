@@ -1,6 +1,6 @@
-From 6941bacc996918f111942ac031590a721004c021 Mon Sep 17 00:00:00 2001
+From 316391db818c483046d41e049d598870c908676d Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Sun, 4 Mar 2018 17:02:45 +0100
+Date: Thu, 8 Mar 2018 17:35:01 +0100
 Subject: [PATCH] mod
 
 ---
@@ -2031,7 +2031,7 @@ index 980f0d9..dcfc74b 100644
  		{
  			if(this.visible)
 diff --git a/net/minecraft/client/gui/inventory/GuiChest.java b/net/minecraft/client/gui/inventory/GuiChest.java
-index b3d8e43..1085a86 100644
+index b3d8e43..87c2cc6 100644
 --- a/net/minecraft/client/gui/inventory/GuiChest.java
 +++ b/net/minecraft/client/gui/inventory/GuiChest.java
 @@ -1,10 +1,15 @@
@@ -2087,7 +2087,7 @@ index b3d8e43..1085a86 100644
 +					for(int i = 0; i < inventoryRows * 9; i++)
 +					{
 +						Slot slot = inventorySlots.inventorySlots.get(i);
-+						if(WItem.isNull(slot.getStack()))
++						if(WItem.isNullOrEmpty(slot.getStack()))
 +							continue;
 +						if(mc.currentScreen == null)
 +							break;
@@ -2109,7 +2109,7 @@ index b3d8e43..1085a86 100644
 +						+ 44; i++)
 +					{
 +						Slot slot = inventorySlots.inventorySlots.get(i);
-+						if(WItem.isNull(slot.getStack()))
++						if(WItem.isNullOrEmpty(slot.getStack()))
 +							continue;
 +						if(mc.currentScreen == null)
 +							break;
