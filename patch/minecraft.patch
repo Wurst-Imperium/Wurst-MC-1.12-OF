@@ -1,6 +1,6 @@
-From 66a09bf66629985f55039a8109db02cd3fa2dc33 Mon Sep 17 00:00:00 2001
+From ebe46d226335b2d81a8f2453e79cb7034e30a260 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Wed, 11 Apr 2018 09:56:04 +0200
+Date: Mon, 23 Apr 2018 15:27:21 +0200
 Subject: [PATCH] mod
 
 ---
@@ -20,6 +20,7 @@ Subject: [PATCH] mod
  net/minecraft/client/gui/GuiCreateFlatWorld.java   |   2 +-
  .../client/gui/GuiCustomizeWorldScreen.java        |   4 +-
  net/minecraft/client/gui/GuiDisconnected.java      |  80 +++++++
+ net/minecraft/client/gui/GuiDownloadTerrain.java   |   3 +
  net/minecraft/client/gui/GuiFlatPresets.java       |   2 +-
  net/minecraft/client/gui/GuiGameOver.java          |  12 +-
  net/minecraft/client/gui/GuiIngame.java            |  10 +
@@ -95,7 +96,7 @@ Subject: [PATCH] mod
  net/minecraft/util/Timer.java                      |  16 +-
  net/minecraft/world/World.java                     |  15 ++
  shadersmod/client/GuiSlotShaders.java              |   2 +-
- 91 files changed, 1259 insertions(+), 314 deletions(-)
+ 92 files changed, 1262 insertions(+), 314 deletions(-)
 
 diff --git a/net/minecraft/block/Block.java b/net/minecraft/block/Block.java
 index 7e18f72..f8aca5c 100644
@@ -1025,6 +1026,27 @@ index 9007dc9..1114f47 100644
  		}
  	}
  	
+diff --git a/net/minecraft/client/gui/GuiDownloadTerrain.java b/net/minecraft/client/gui/GuiDownloadTerrain.java
+index 675c4dc..34fbc2e 100644
+--- a/net/minecraft/client/gui/GuiDownloadTerrain.java
++++ b/net/minecraft/client/gui/GuiDownloadTerrain.java
+@@ -5,6 +5,7 @@ import java.io.IOException;
+ import net.minecraft.client.network.NetHandlerPlayClient;
+ import net.minecraft.client.resources.I18n;
+ import net.minecraft.network.play.client.CPacketKeepAlive;
++import net.wurstclient.WurstClient;
+ 
+ public class GuiDownloadTerrain extends GuiScreen
+ {
+@@ -44,6 +45,8 @@ public class GuiDownloadTerrain extends GuiScreen
+ 		
+ 		if(this.progress % 20 == 0)
+ 		{
++			// TODO: Client
++			if(WurstClient.INSTANCE.options.mc112x_compatibility < 2)
+ 				this.connection.sendPacket(new CPacketKeepAlive());
+ 		}
+ 	}
 diff --git a/net/minecraft/client/gui/GuiFlatPresets.java b/net/minecraft/client/gui/GuiFlatPresets.java
 index 42496bd..d10e454 100644
 --- a/net/minecraft/client/gui/GuiFlatPresets.java
