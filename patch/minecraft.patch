@@ -1,6 +1,6 @@
-From ebe46d226335b2d81a8f2453e79cb7034e30a260 Mon Sep 17 00:00:00 2001
+From 92831557015fd6b0acdda4b5c595349f90bbf241 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Mon, 23 Apr 2018 15:27:21 +0200
+Date: Mon, 23 Apr 2018 15:33:09 +0200
 Subject: [PATCH] mod
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH] mod
  net/minecraft/block/BlockLiquid.java               |  13 +-
  net/minecraft/block/BlockSlab.java                 |   5 +-
  net/minecraft/block/BlockSoulSand.java             |   5 +
- net/minecraft/client/Minecraft.java                |  82 +++++--
+ net/minecraft/client/Minecraft.java                |  84 +++++--
  net/minecraft/client/entity/EntityPlayerSP.java    | 101 ++++++--
  net/minecraft/client/gui/FontRenderer.java         |   6 +-
  net/minecraft/client/gui/GuiButton.java            |  26 ++-
@@ -96,7 +96,7 @@ Subject: [PATCH] mod
  net/minecraft/util/Timer.java                      |  16 +-
  net/minecraft/world/World.java                     |  15 ++
  shadersmod/client/GuiSlotShaders.java              |   2 +-
- 92 files changed, 1262 insertions(+), 314 deletions(-)
+ 92 files changed, 1263 insertions(+), 315 deletions(-)
 
 diff --git a/net/minecraft/block/Block.java b/net/minecraft/block/Block.java
 index 7e18f72..f8aca5c 100644
@@ -275,7 +275,7 @@ index 2c114d0..3f3d8e5 100644
  		entityIn.motionZ *= 0.4D;
  	}
 diff --git a/net/minecraft/client/Minecraft.java b/net/minecraft/client/Minecraft.java
-index f6490ac..44a8997 100644
+index f6490ac..6fce3d0 100644
 --- a/net/minecraft/client/Minecraft.java
 +++ b/net/minecraft/client/Minecraft.java
 @@ -162,12 +162,22 @@ import net.minecraft.world.chunk.storage.AnvilSaveConverter;
@@ -360,6 +360,15 @@ index f6490ac..44a8997 100644
  	}
  	
  	private void func_193986_ar()
+@@ -693,7 +710,7 @@ public class Minecraft implements IThreadListener, ISnooperInfo
+ 	private void createDisplay() throws LWJGLException
+ 	{
+ 		Display.setResizable(true);
+-		Display.setTitle("Minecraft 1.12");
++		Display.setTitle("Minecraft 1.12.2");
+ 		
+ 		try
+ 		{
 @@ -732,6 +749,9 @@ public class Minecraft implements IThreadListener, ISnooperInfo
  		{
  			Display.setDisplayMode(
