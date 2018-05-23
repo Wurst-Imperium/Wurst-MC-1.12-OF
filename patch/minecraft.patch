@@ -1,11 +1,13 @@
-From 500f1a626fe7916a9c5822f1a5296986b740a8c5 Mon Sep 17 00:00:00 2001
+From f084e1a711c4fa1f9c92a523006310c19397cb34 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Fri, 18 May 2018 13:10:17 +0200
+Date: Wed, 23 May 2018 21:02:39 +0200
 Subject: [PATCH] mod
 
 ---
  net/minecraft/block/Block.java                     |  24 +-
  net/minecraft/block/BlockCactus.java               |   6 +
+ net/minecraft/block/BlockEndPortalFrame.java       |   4 +-
+ net/minecraft/block/BlockFire.java                 |  22 +-
  net/minecraft/block/BlockLiquid.java               |  13 +-
  net/minecraft/block/BlockSlab.java                 |   5 +-
  net/minecraft/block/BlockSoulSand.java             |   5 +
@@ -29,12 +31,13 @@ Subject: [PATCH] mod
  net/minecraft/client/gui/GuiLanguage.java          |   2 +-
  net/minecraft/client/gui/GuiListExtended.java      |   5 +-
  net/minecraft/client/gui/GuiLockIconButton.java    |   2 +-
- net/minecraft/client/gui/GuiMainMenu.java          |  30 ++-
+ net/minecraft/client/gui/GuiMainMenu.java          |  32 ++-
  net/minecraft/client/gui/GuiMemoryErrorScreen.java |   3 +-
  net/minecraft/client/gui/GuiMerchant.java          |   2 +-
  net/minecraft/client/gui/GuiMultiplayer.java       |  91 +++++++-
  net/minecraft/client/gui/GuiNewChat.java           |  10 +
  net/minecraft/client/gui/GuiOptionsRowList.java    |   8 +-
+ net/minecraft/client/gui/GuiOverlayDebug.java      |  20 +-
  net/minecraft/client/gui/GuiPageButtonList.java    |   2 +-
  net/minecraft/client/gui/GuiScreen.java            |   8 +-
  net/minecraft/client/gui/GuiScreenBook.java        |  63 +++++-
@@ -44,11 +47,13 @@ Subject: [PATCH] mod
  net/minecraft/client/gui/GuiSlot.java              |   6 +-
  net/minecraft/client/gui/GuiSlotRealmsProxy.java   |   5 +-
  net/minecraft/client/gui/GuiSnooper.java           |   2 +-
+ net/minecraft/client/gui/GuiVideoSettings.java     |   2 +-
  .../client/gui/ServerListEntryNormal.java          |  28 ++-
  net/minecraft/client/gui/achievement/GuiStats.java |  23 +-
  net/minecraft/client/gui/inventory/GuiBeacon.java  |   2 +-
  net/minecraft/client/gui/inventory/GuiChest.java   |  76 +++++++
  .../client/gui/inventory/GuiContainer.java         |   4 +
+ .../client/gui/inventory/GuiContainerCreative.java |   4 +-
  .../client/gui/inventory/GuiEditSign.java          |  15 ++
  .../client/gui/recipebook/GuiButtonRecipe.java     |   2 +-
  .../client/gui/recipebook/GuiButtonRecipeTab.java  |   2 +-
@@ -60,12 +65,14 @@ Subject: [PATCH] mod
  net/minecraft/client/multiplayer/ServerList.java   |   6 +
  .../client/network/NetHandlerPlayClient.java       |  25 +-
  .../client/network/NetworkPlayerInfo.java          |   8 +
+ net/minecraft/client/network/ServerPinger.java     |   3 +-
  .../client/renderer/BlockFluidRenderer.java        |   8 +
- .../client/renderer/BlockModelRenderer.java        |  23 +-
- net/minecraft/client/renderer/EntityRenderer.java  |  83 ++++++-
+ .../client/renderer/BlockModelRenderer.java        |  46 ++--
+ net/minecraft/client/renderer/EntityRenderer.java  |  86 +++++--
  .../client/renderer/InventoryEffectRenderer.java   |  18 ++
- net/minecraft/client/renderer/ItemRenderer.java    |   9 +
+ net/minecraft/client/renderer/ItemRenderer.java    |  12 +-
  net/minecraft/client/renderer/chunk/VisGraph.java  |   7 +
+ .../debug/DebugRendererNeighborsUpdate.java        |   6 +-
  net/minecraft/client/renderer/entity/Render.java   |  23 ++
  .../client/renderer/entity/RenderLivingBase.java   |   8 +-
  .../client/renderer/entity/RenderManager.java      |   6 +-
@@ -76,27 +83,49 @@ Subject: [PATCH] mod
  net/minecraft/entity/Entity.java                   | 252 +++++++++++----------
  net/minecraft/entity/EntityLiving.java             |   4 +-
  net/minecraft/entity/EntityLivingBase.java         |  24 +-
- net/minecraft/entity/item/EntityMinecart.java      |   2 +-
+ net/minecraft/entity/ai/EntityAITasks.java         |   5 +-
+ net/minecraft/entity/boss/EntityDragon.java        |  11 +-
+ .../boss/dragon/phase/PhaseStrafePlayer.java       |   3 +-
+ net/minecraft/entity/item/EntityBoat.java          |   6 +-
+ net/minecraft/entity/item/EntityEnderEye.java      |   5 +-
+ .../entity/item/EntityFireworkRocket.java          |   5 +-
+ net/minecraft/entity/item/EntityMinecart.java      |   5 +-
+ net/minecraft/entity/monster/EntityEnderman.java   |   9 +-
+ net/minecraft/entity/monster/EntityGuardian.java   |   6 +-
  net/minecraft/entity/monster/EntitySlime.java      |   2 +-
  net/minecraft/entity/passive/AbstractHorse.java    |   2 +-
  net/minecraft/entity/passive/EntityBat.java        |   2 +-
+ net/minecraft/entity/passive/EntityVillager.java   |   8 +-
  net/minecraft/entity/player/EntityPlayer.java      |  13 +-
  net/minecraft/entity/player/EntityPlayerMP.java    |   2 +-
+ net/minecraft/entity/projectile/EntityArrow.java   |   5 +-
+ .../entity/projectile/EntityDragonFireball.java    |   4 +-
+ .../entity/projectile/EntityFishHook.java          |   5 +-
+ .../entity/projectile/EntityLlamaSpit.java         |   5 +-
+ .../entity/projectile/EntityThrowable.java         |   5 +-
+ .../entity/projectile/ProjectileHelper.java        |   5 +-
  net/minecraft/item/ItemSword.java                  |   2 +-
  net/minecraft/item/ItemTool.java                   |   2 +-
  net/minecraft/network/EnumConnectionState.java     |  35 +++
  net/minecraft/network/NetworkManager.java          |  18 ++
  .../network/play/INetHandlerPlayClient.java        |   4 +
+ net/minecraft/potion/Potion.java                   |   4 +-
  net/minecraft/potion/PotionEffect.java             |   5 +-
  net/minecraft/realms/RealmsButton.java             |   2 +-
+ net/minecraft/realms/RealmsSharedConstants.java    |   4 +-
+ net/minecraft/src/ConnectedTextures.java           |  12 +-
+ net/minecraft/tileentity/BannerPattern.java        |   3 +-
+ net/minecraft/tileentity/TileEntityBeacon.java     |   4 +-
  net/minecraft/tileentity/TileEntitySign.java       |   2 +-
  net/minecraft/util/MovementInput.java              |   4 +-
  net/minecraft/util/MovementInputFromOptions.java   |   8 +-
  net/minecraft/util/ScreenShotHelper.java           |   6 +
  net/minecraft/util/Timer.java                      |  16 +-
  net/minecraft/world/World.java                     |  15 ++
+ net/minecraft/world/end/DragonFightManager.java    |   4 +-
+ .../world/gen/structure/MapGenStronghold.java      |   8 +-
  shadersmod/client/GuiSlotShaders.java              |   2 +-
- 92 files changed, 1261 insertions(+), 316 deletions(-)
+ 121 files changed, 1355 insertions(+), 443 deletions(-)
 
 diff --git a/net/minecraft/block/Block.java b/net/minecraft/block/Block.java
 index 7e18f72..f8aca5c 100644
@@ -184,6 +213,60 @@ index 1c51a2f..90d3641 100644
 +				pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
 +		
  		return CACTUS_COLLISION_AABB;
+ 	}
+ 	
+diff --git a/net/minecraft/block/BlockEndPortalFrame.java b/net/minecraft/block/BlockEndPortalFrame.java
+index d230d0d..b66c5a1 100644
+--- a/net/minecraft/block/BlockEndPortalFrame.java
++++ b/net/minecraft/block/BlockEndPortalFrame.java
+@@ -178,8 +178,8 @@ public class BlockEndPortalFrame extends Block
+ 					.aisle("?vvv?", ">???<", ">???<", ">???<", "?^^^?")
+ 					.where('?', BlockWorldState.hasState(BlockStateMatcher.ANY))
+ 					.where('^', BlockWorldState.hasState(BlockStateMatcher
+-						.forBlock(Blocks.END_PORTAL_FRAME).where(EYE,
+-							Predicates.equalTo(Boolean.valueOf(true)))
++						.forBlock(Blocks.END_PORTAL_FRAME)
++						.where(EYE, Predicates.equalTo(Boolean.valueOf(true)))
+ 						.where(FACING, Predicates.equalTo(EnumFacing.SOUTH))))
+ 					.where('>', BlockWorldState.hasState(BlockStateMatcher
+ 						.forBlock(Blocks.END_PORTAL_FRAME)
+diff --git a/net/minecraft/block/BlockFire.java b/net/minecraft/block/BlockFire.java
+index ea70a1d..823545b 100644
+--- a/net/minecraft/block/BlockFire.java
++++ b/net/minecraft/block/BlockFire.java
+@@ -50,26 +50,20 @@ public class BlockFire extends Block
+ 		BlockPos pos)
+ 	{
+ 		return !worldIn.getBlockState(pos.down()).isFullyOpaque()
+-			&& !Blocks.FIRE
+-				.canCatchFire(
+-					worldIn, pos
+-						.down())
++			&& !Blocks.FIRE.canCatchFire(worldIn, pos.down())
+ 				? state
+ 					.withProperty(NORTH,
+-									Boolean.valueOf(this.canCatchFire(worldIn,
+-										pos.north())))
++						Boolean
++							.valueOf(this.canCatchFire(worldIn, pos.north())))
+ 					.withProperty(EAST,
+-									Boolean.valueOf(
+-										this.canCatchFire(worldIn, pos.east())))
++						Boolean.valueOf(this.canCatchFire(worldIn, pos.east())))
+ 					.withProperty(SOUTH,
+-									Boolean.valueOf(this.canCatchFire(worldIn,
+-										pos.south())))
++						Boolean
++							.valueOf(this.canCatchFire(worldIn, pos.south())))
+ 					.withProperty(WEST,
+-									Boolean.valueOf(
+-										this.canCatchFire(worldIn, pos.west())))
++						Boolean.valueOf(this.canCatchFire(worldIn, pos.west())))
+ 					.withProperty(UPPER,
+-									Boolean.valueOf(
+-										this.canCatchFire(worldIn, pos.up())))
++						Boolean.valueOf(this.canCatchFire(worldIn, pos.up())))
+ 				: this.getDefaultState();
  	}
  	
 diff --git a/net/minecraft/block/BlockLiquid.java b/net/minecraft/block/BlockLiquid.java
@@ -929,7 +1012,7 @@ index 1201a71..6ac73f5 100644
  	}
  }
 diff --git a/net/minecraft/client/gui/GuiDisconnected.java b/net/minecraft/client/gui/GuiDisconnected.java
-index 9007dc9..1114f47 100644
+index 9007dc9..14a60d8 100644
 --- a/net/minecraft/client/gui/GuiDisconnected.java
 +++ b/net/minecraft/client/gui/GuiDisconnected.java
 @@ -5,6 +5,9 @@ import java.util.List;
@@ -981,8 +1064,8 @@ index 9007dc9..1114f47 100644
 +			if(parentScreen instanceof GuiMultiplayer
 +				&& ((GuiMultiplayer)parentScreen).serverListSelector
 +					.getSelected() != -1)
-+				buttonList.add(new GuiButton(3,
-+					width / 2 - 100, height / 2 + textHeight / 2
++				buttonList.add(new GuiButton(
++					3, width / 2 - 100, height / 2 + textHeight / 2
 +						+ fontRendererObj.FONT_HEIGHT + 72,
 +					"§4Delete Server§r"));
 +		if(WurstClient.INSTANCE.options.autoReconnect)
@@ -1327,7 +1410,7 @@ index d06ec24..2b1f8c5 100644
  	{
  		if(this.visible)
 diff --git a/net/minecraft/client/gui/GuiMainMenu.java b/net/minecraft/client/gui/GuiMainMenu.java
-index df76c38..a12d136 100644
+index df76c38..ce3b107 100644
 --- a/net/minecraft/client/gui/GuiMainMenu.java
 +++ b/net/minecraft/client/gui/GuiMainMenu.java
 @@ -43,6 +43,8 @@ import net.minecraft.util.text.TextFormatting;
@@ -1397,6 +1480,15 @@ index df76c38..a12d136 100644
  	{
  		this.mc.getFramebuffer().unbindFramebuffer();
  		GlStateManager.viewport(0, 0, 256, 256);
+@@ -767,7 +785,7 @@ public class GuiMainMenu extends GuiScreen
+ 		this.drawCenteredString(this.fontRendererObj, this.splashText, 0, -8,
+ 			-256);
+ 		GlStateManager.popMatrix();
+-		String s = "Minecraft 1.12";
++		String s = "Minecraft 1.12.2";
+ 		
+ 		if(this.mc.isDemo())
+ 		{
 diff --git a/net/minecraft/client/gui/GuiMemoryErrorScreen.java b/net/minecraft/client/gui/GuiMemoryErrorScreen.java
 index fa14855..1c4c3e1 100644
 --- a/net/minecraft/client/gui/GuiMemoryErrorScreen.java
@@ -1651,6 +1743,60 @@ index 75921fc..68afa51 100644
  			}
  		}
  		
+diff --git a/net/minecraft/client/gui/GuiOverlayDebug.java b/net/minecraft/client/gui/GuiOverlayDebug.java
+index 5c977f0..705477a 100644
+--- a/net/minecraft/client/gui/GuiOverlayDebug.java
++++ b/net/minecraft/client/gui/GuiOverlayDebug.java
+@@ -109,7 +109,7 @@ public class GuiOverlayDebug extends Gui
+ 		if(this.mc.isReducedDebug())
+ 		{
+ 			return Lists.newArrayList(
+-				"Minecraft 1.12 (" + this.mc.getVersion() + "/"
++				"Minecraft 1.12.2 (" + this.mc.getVersion() + "/"
+ 					+ ClientBrandRetriever.getClientModName() + ")",
+ 				this.mc.debug, this.mc.renderGlobal.getDebugInfoRenders(),
+ 				this.mc.renderGlobal.getDebugInfoEntities(),
+@@ -142,25 +142,20 @@ public class GuiOverlayDebug extends Gui
+ 				s = "Towards positive X";
+ 			}
+ 			
+-			List<String> list =
+-				Lists
+-					.newArrayList(
+-						"Minecraft 1.12 (" + this.mc.getVersion() + "/"
++			List<String> list = Lists.newArrayList(
++				"Minecraft 1.12.2 (" + this.mc.getVersion() + "/"
+ 					+ ClientBrandRetriever.getClientModName()
+-							+ ("release"
+-								.equalsIgnoreCase(this.mc.getVersionType()) ? ""
++					+ ("release".equalsIgnoreCase(this.mc.getVersionType()) ? ""
+ 						: "/" + this.mc.getVersionType())
+ 					+ ")",
+-						this.mc.debug,
+-						this.mc.renderGlobal.getDebugInfoRenders(),
++				this.mc.debug, this.mc.renderGlobal.getDebugInfoRenders(),
+ 				this.mc.renderGlobal.getDebugInfoEntities(),
+ 				"P: " + this.mc.effectRenderer.getStatistics() + ". T: "
+ 					+ this.mc.world.getDebugLoadedEntities(),
+ 				this.mc.world.getProviderName(), "",
+ 				String.format("XYZ: %.3f / %.5f / %.3f",
+ 					this.mc.getRenderViewEntity().posX,
+-							this.mc.getRenderViewEntity()
+-								.getEntityBoundingBox().minY,
++					this.mc.getRenderViewEntity().getEntityBoundingBox().minY,
+ 					this.mc.getRenderViewEntity().posZ),
+ 				String.format("Block: %d %d %d", blockpos.getX(),
+ 					blockpos.getY(), blockpos.getZ()),
+@@ -168,8 +163,7 @@ public class GuiOverlayDebug extends Gui
+ 					blockpos.getX() & 15, blockpos.getY() & 15,
+ 					blockpos.getZ() & 15, blockpos.getX() >> 4,
+ 					blockpos.getY() >> 4, blockpos.getZ() >> 4),
+-						String.format("Facing: %s (%s) (%.1f / %.1f)",
+-							enumfacing, s,
++				String.format("Facing: %s (%s) (%.1f / %.1f)", enumfacing, s,
+ 					MathHelper.wrapDegrees(entity.rotationYaw),
+ 					MathHelper.wrapDegrees(entity.rotationPitch)));
+ 			
 diff --git a/net/minecraft/client/gui/GuiPageButtonList.java b/net/minecraft/client/gui/GuiPageButtonList.java
 index bc76d47..0dc9023 100644
 --- a/net/minecraft/client/gui/GuiPageButtonList.java
@@ -1922,6 +2068,19 @@ index 5771d0f..091357a 100644
  			int p_192637_3_, int p_192637_4_, int p_192637_5_, int p_192637_6_,
  			float p_192637_7_)
  		{
+diff --git a/net/minecraft/client/gui/GuiVideoSettings.java b/net/minecraft/client/gui/GuiVideoSettings.java
+index 33d0fe3..6919fdf 100644
+--- a/net/minecraft/client/gui/GuiVideoSettings.java
++++ b/net/minecraft/client/gui/GuiVideoSettings.java
+@@ -250,7 +250,7 @@ public class GuiVideoSettings extends GuiScreenOF
+ 		}
+ 		
+ 		this.drawString(this.fontRendererObj, s, 2, this.height - 10, 8421504);
+-		String s2 = "Minecraft 1.12";
++		String s2 = "Minecraft 1.12.2";
+ 		int i = this.fontRendererObj.getStringWidth(s2);
+ 		this.drawString(this.fontRendererObj, s2, this.width - i - 2,
+ 			this.height - 10, 8421504);
 diff --git a/net/minecraft/client/gui/ServerListEntryNormal.java b/net/minecraft/client/gui/ServerListEntryNormal.java
 index 991c579..bdcf5a1 100644
 --- a/net/minecraft/client/gui/ServerListEntryNormal.java
@@ -2192,6 +2351,21 @@ index 45b74aa..e648d8c 100644
  		if(this.mc.player != null)
  		{
  			this.inventorySlots.onContainerClosed(this.mc.player);
+diff --git a/net/minecraft/client/gui/inventory/GuiContainerCreative.java b/net/minecraft/client/gui/inventory/GuiContainerCreative.java
+index 794e19a..fcc0097 100644
+--- a/net/minecraft/client/gui/inventory/GuiContainerCreative.java
++++ b/net/minecraft/client/gui/inventory/GuiContainerCreative.java
+@@ -173,8 +173,8 @@ public class GuiContainerCreative extends InventoryEffectRenderer
+ 						.setItemStack(ItemStack.field_190927_a);
+ 				}else
+ 				{
+-					this.mc.player.inventoryContainer.slotClick(
+-						slotIn == null ? slotId
++					this.mc.player.inventoryContainer.slotClick(slotIn == null
++						? slotId
+ 						: ((GuiContainerCreative.CreativeSlot)slotIn).slot.slotNumber,
+ 						mouseButton, type, this.mc.player);
+ 					this.mc.player.inventoryContainer.detectAndSendChanges();
 diff --git a/net/minecraft/client/gui/inventory/GuiEditSign.java b/net/minecraft/client/gui/inventory/GuiEditSign.java
 index e1c2223..64a8cb2 100644
 --- a/net/minecraft/client/gui/inventory/GuiEditSign.java
@@ -2525,6 +2699,20 @@ index 549f4a7..49efcba 100644
  	/**
  	 * Returns the GameProfile for the player represented by this
  	 * NetworkPlayerInfo instance
+diff --git a/net/minecraft/client/network/ServerPinger.java b/net/minecraft/client/network/ServerPinger.java
+index 486a586..506991c 100644
+--- a/net/minecraft/client/network/ServerPinger.java
++++ b/net/minecraft/client/network/ServerPinger.java
+@@ -299,8 +299,7 @@ public class ServerPinger
+ 													.array(),
+ 												StandardCharsets.UTF_16BE);
+ 										String[] astring =
+-											(String[])Iterables
+-												.toArray(
++											(String[])Iterables.toArray(
+ 												ServerPinger.PING_RESPONSE_SPLITTER
+ 													.split(s),
+ 												String.class);
 diff --git a/net/minecraft/client/renderer/BlockFluidRenderer.java b/net/minecraft/client/renderer/BlockFluidRenderer.java
 index 7b863e3..21bb86f 100644
 --- a/net/minecraft/client/renderer/BlockFluidRenderer.java
@@ -2552,7 +2740,7 @@ index 7b863e3..21bb86f 100644
  			TextureAtlasSprite[] atextureatlassprite =
  				flag ? this.atlasSpritesLava : this.atlasSpritesWater;
 diff --git a/net/minecraft/client/renderer/BlockModelRenderer.java b/net/minecraft/client/renderer/BlockModelRenderer.java
-index 7a3cb59..3f4e45c 100644
+index 7a3cb59..2fa807b 100644
 --- a/net/minecraft/client/renderer/BlockModelRenderer.java
 +++ b/net/minecraft/client/renderer/BlockModelRenderer.java
 @@ -31,6 +31,8 @@ import net.minecraft.util.math.MathHelper;
@@ -2607,8 +2795,66 @@ index 7a3cb59..3f4e45c 100644
  			return br1 + br2 + br3 + br4 >> 2 & 16711935;
  		}
  		
+@@ -1040,8 +1061,7 @@ public class BlockModelRenderer
+ 				BlockModelRenderer.Orientation.EAST,
+ 				BlockModelRenderer.Orientation.SOUTH}),
+ 		UP(new EnumFacing[]{EnumFacing.EAST, EnumFacing.WEST, EnumFacing.NORTH,
+-			EnumFacing.SOUTH}, 1.0F,
+-			true,
++			EnumFacing.SOUTH}, 1.0F, true,
+ 			new BlockModelRenderer.Orientation[]{
+ 				BlockModelRenderer.Orientation.EAST,
+ 				BlockModelRenderer.Orientation.SOUTH,
+@@ -1078,9 +1098,8 @@ public class BlockModelRenderer
+ 				BlockModelRenderer.Orientation.FLIP_SOUTH,
+ 				BlockModelRenderer.Orientation.FLIP_WEST,
+ 				BlockModelRenderer.Orientation.SOUTH}),
+-		NORTH(
+-			new EnumFacing[]{EnumFacing.UP, EnumFacing.DOWN, EnumFacing.EAST,
+-				EnumFacing.WEST},
++		NORTH(new EnumFacing[]{
++			EnumFacing.UP, EnumFacing.DOWN, EnumFacing.EAST, EnumFacing.WEST},
+ 			0.8F, true,
+ 			new BlockModelRenderer.Orientation[]{
+ 				BlockModelRenderer.Orientation.UP,
+@@ -1118,9 +1137,8 @@ public class BlockModelRenderer
+ 				BlockModelRenderer.Orientation.WEST,
+ 				BlockModelRenderer.Orientation.FLIP_DOWN,
+ 				BlockModelRenderer.Orientation.FLIP_WEST}),
+-		SOUTH(
+-			new EnumFacing[]{EnumFacing.WEST, EnumFacing.EAST, EnumFacing.DOWN,
+-				EnumFacing.UP},
++		SOUTH(new EnumFacing[]{
++			EnumFacing.WEST, EnumFacing.EAST, EnumFacing.DOWN, EnumFacing.UP},
+ 			0.8F, true,
+ 			new BlockModelRenderer.Orientation[]{
+ 				BlockModelRenderer.Orientation.UP,
+@@ -1158,9 +1176,8 @@ public class BlockModelRenderer
+ 				BlockModelRenderer.Orientation.EAST,
+ 				BlockModelRenderer.Orientation.UP,
+ 				BlockModelRenderer.Orientation.EAST}),
+-		WEST(
+-			new EnumFacing[]{EnumFacing.UP, EnumFacing.DOWN, EnumFacing.NORTH,
+-				EnumFacing.SOUTH},
++		WEST(new EnumFacing[]{
++			EnumFacing.UP, EnumFacing.DOWN, EnumFacing.NORTH, EnumFacing.SOUTH},
+ 			0.6F, true,
+ 			new BlockModelRenderer.Orientation[]{
+ 				BlockModelRenderer.Orientation.UP,
+@@ -1198,9 +1215,8 @@ public class BlockModelRenderer
+ 				BlockModelRenderer.Orientation.FLIP_SOUTH,
+ 				BlockModelRenderer.Orientation.FLIP_DOWN,
+ 				BlockModelRenderer.Orientation.SOUTH}),
+-		EAST(
+-			new EnumFacing[]{EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH,
+-				EnumFacing.SOUTH},
++		EAST(new EnumFacing[]{
++			EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.SOUTH},
+ 			0.6F, true,
+ 			new BlockModelRenderer.Orientation[]{
+ 				BlockModelRenderer.Orientation.FLIP_DOWN,
 diff --git a/net/minecraft/client/renderer/EntityRenderer.java b/net/minecraft/client/renderer/EntityRenderer.java
-index 76a4ec6..632738a 100644
+index 76a4ec6..63c1b13 100644
 --- a/net/minecraft/client/renderer/EntityRenderer.java
 +++ b/net/minecraft/client/renderer/EntityRenderer.java
 @@ -91,6 +91,10 @@ import net.minecraft.world.GameType;
@@ -2745,7 +2991,17 @@ index 76a4ec6..632738a 100644
  			}
  			
  			GlStateManager.clear(256);
-@@ -2723,9 +2756,12 @@ public class EntityRenderer implements IResourceManagerReloadListener
+@@ -2670,8 +2703,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
+ 			IBlockState iblockstate = this.mc.world.getBlockState(blockpos);
+ 			Vec3d vec3d3 = (Vec3d)Reflector.call(iblockstate.getBlock(),
+ 				Reflector.ForgeBlock_getFogColor, this.mc.world, blockpos,
+-				iblockstate,
+-				entity, new Vec3d((double)this.fogColorRed,
++				iblockstate, entity, new Vec3d((double)this.fogColorRed,
+ 					(double)this.fogColorGreen, (double)this.fogColorBlue),
+ 				partialTicks);
+ 			this.fogColorRed = (float)vec3d3.xCoord;
+@@ -2723,9 +2755,12 @@ public class EntityRenderer implements IResourceManagerReloadListener
  			+ (entity.posY - entity.lastTickPosY) * (double)partialTicks)
  			* world.provider.getVoidFogYFactor();
  		
@@ -2759,7 +3015,7 @@ index 76a4ec6..632738a 100644
  			int i = ((EntityLivingBase)entity)
  				.getActivePotionEffect(MobEffects.BLINDNESS).getDuration();
  			
-@@ -2847,9 +2883,13 @@ public class EntityRenderer implements IResourceManagerReloadListener
+@@ -2847,9 +2882,13 @@ public class EntityRenderer implements IResourceManagerReloadListener
  		if(f >= 0.0F)
  		{
  			GlStateManager.setFogDensity(f);
@@ -2774,7 +3030,7 @@ index 76a4ec6..632738a 100644
  			float f2 = 5.0F;
  			int i = ((EntityLivingBase)entity)
  				.getActivePotionEffect(MobEffects.BLINDNESS).getDuration();
-@@ -2906,9 +2946,12 @@ public class EntityRenderer implements IResourceManagerReloadListener
+@@ -2906,9 +2945,12 @@ public class EntityRenderer implements IResourceManagerReloadListener
  			
  			if(entity instanceof EntityLivingBase)
  			{
@@ -2788,7 +3044,7 @@ index 76a4ec6..632738a 100644
  					GlStateManager.setFogDensity(0.01F);
  				}else
  				{
-@@ -2927,6 +2970,12 @@ public class EntityRenderer implements IResourceManagerReloadListener
+@@ -2927,6 +2969,12 @@ public class EntityRenderer implements IResourceManagerReloadListener
  			}
  		}else if(iblockstate.getMaterial() == Material.LAVA)
  		{
@@ -2801,7 +3057,7 @@ index 76a4ec6..632738a 100644
  				if(Config.isShaders())
  				{
  					Shaders.setFog(GlStateManager.FogMode.EXP);
-@@ -2936,6 +2985,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
+@@ -2936,6 +2984,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
  				}
  				
  				GlStateManager.setFogDensity(2.0F);
@@ -2809,7 +3065,7 @@ index 76a4ec6..632738a 100644
  		}else
  		{
  			float f1 = this.farPlaneDistance;
-@@ -3370,7 +3420,18 @@ public class EntityRenderer implements IResourceManagerReloadListener
+@@ -3370,7 +3419,18 @@ public class EntityRenderer implements IResourceManagerReloadListener
  		GlStateManager.rotate(
  			(float)(isThirdPersonFrontal ? -1 : 1) * viewerPitch, 1.0F, 0.0F,
  			0.0F);
@@ -2874,7 +3130,7 @@ index e1f814f..ea395fe 100644
  	 * Adds the buttons (and other controls) to the screen in question. Called
  	 * when the GUI is displayed and when the
 diff --git a/net/minecraft/client/renderer/ItemRenderer.java b/net/minecraft/client/renderer/ItemRenderer.java
-index 0114903..18848ba 100644
+index 0114903..6a4b97b 100644
 --- a/net/minecraft/client/renderer/ItemRenderer.java
 +++ b/net/minecraft/client/renderer/ItemRenderer.java
 @@ -34,6 +34,7 @@ import net.minecraft.util.ResourceLocation;
@@ -2885,7 +3141,17 @@ index 0114903..18848ba 100644
  import shadersmod.client.Shaders;
  
  public class ItemRenderer
-@@ -664,6 +665,10 @@ public class ItemRenderer
+@@ -539,8 +540,7 @@ public class ItemRenderer
+ 					this.transformFirstPerson(enumhandside, p_187457_5_);
+ 				}
+ 				
+-				this.renderItemSide(p_187457_1_, p_187457_6_,
+-					flag1
++				this.renderItemSide(p_187457_1_, p_187457_6_, flag1
+ 					? ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND
+ 					: ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND,
+ 					!flag1);
+@@ -664,6 +664,10 @@ public class ItemRenderer
  	 */
  	private void renderWaterOverlayTexture(float partialTicks)
  	{
@@ -2896,7 +3162,7 @@ index 0114903..18848ba 100644
  		if(!Config.isShaders() || Shaders.isUnderwaterOverlay())
  		{
  			this.mc.getTextureManager().bindTexture(RES_UNDERWATER_OVERLAY);
-@@ -708,6 +713,10 @@ public class ItemRenderer
+@@ -708,6 +712,10 @@ public class ItemRenderer
  	 */
  	private void renderFireInFirstPerson()
  	{
@@ -2932,6 +3198,24 @@ index c7cb5ee..c849b78 100644
  		this.bitSet.set(getIndex(pos), true);
  		--this.empty;
  	}
+diff --git a/net/minecraft/client/renderer/debug/DebugRendererNeighborsUpdate.java b/net/minecraft/client/renderer/debug/DebugRendererNeighborsUpdate.java
+index 7b0469c..632ada8 100644
+--- a/net/minecraft/client/renderer/debug/DebugRendererNeighborsUpdate.java
++++ b/net/minecraft/client/renderer/debug/DebugRendererNeighborsUpdate.java
+@@ -98,11 +98,9 @@ public class DebugRendererNeighborsUpdate
+ 					
+ 					if(set.add(blockpos))
+ 					{
+-						RenderGlobal
+-							.drawSelectionBoundingBox(
++						RenderGlobal.drawSelectionBoundingBox(
+ 							(new AxisAlignedBB(BlockPos.ORIGIN))
+-									.expandXyz(0.002D)
+-									.contract(0.0025D * (double)k)
++								.expandXyz(0.002D).contract(0.0025D * (double)k)
+ 								.offset((double)blockpos.getX(),
+ 									(double)blockpos.getY(),
+ 									(double)blockpos.getZ())
 diff --git a/net/minecraft/client/renderer/entity/Render.java b/net/minecraft/client/renderer/entity/Render.java
 index b37d8fc..dadd26a 100644
 --- a/net/minecraft/client/renderer/entity/Render.java
@@ -3679,8 +3963,119 @@ index 5f000c2..28d3581 100644
  		this.world.theProfiler.endSection();
  		this.world.theProfiler.startSection("push");
  		this.collideWithNearbyEntities();
+diff --git a/net/minecraft/entity/ai/EntityAITasks.java b/net/minecraft/entity/ai/EntityAITasks.java
+index 0de75de..868c36e 100644
+--- a/net/minecraft/entity/ai/EntityAITasks.java
++++ b/net/minecraft/entity/ai/EntityAITasks.java
+@@ -234,9 +234,8 @@ public class EntityAITasks
+ 				return true;
+ 			}else
+ 			{
+-				return p_equals_1_ != null
+-					&& this.getClass() == p_equals_1_.getClass()
+-						? this.action.equals(
++				return p_equals_1_ != null && this.getClass() == p_equals_1_
++					.getClass() ? this.action.equals(
+ 						((EntityAITasks.EntityAITaskEntry)p_equals_1_).action)
+ 						: false;
+ 			}
+diff --git a/net/minecraft/entity/boss/EntityDragon.java b/net/minecraft/entity/boss/EntityDragon.java
+index d9bc446..1283f08 100644
+--- a/net/minecraft/entity/boss/EntityDragon.java
++++ b/net/minecraft/entity/boss/EntityDragon.java
+@@ -349,7 +349,8 @@ public class EntityDragon extends EntityLiving implements IEntityMultiPart, IMob
+ 						this.motionY += d7 * 0.10000000149011612D;
+ 						this.rotationYaw =
+ 							MathHelper.wrapDegrees(this.rotationYaw);
+-						double d4 = MathHelper
++						double d4 =
++							MathHelper
+ 								.clamp(
+ 									MathHelper.wrapDegrees(180.0D
+ 										- MathHelper.atan2(d6, d8)
+@@ -454,13 +455,13 @@ public class EntityDragon extends EntityLiving implements IEntityMultiPart, IMob
+ 					this.collideWithEntities(
+ 						this.world.getEntitiesWithinAABBExcludingEntity(this,
+ 							this.dragonPartWing1.getEntityBoundingBox()
+-								.expand(4.0D, 2.0D, 4.0D).offset(0.0D, -2.0D,
+-									0.0D)));
++								.expand(4.0D, 2.0D, 4.0D)
++								.offset(0.0D, -2.0D, 0.0D)));
+ 					this.collideWithEntities(
+ 						this.world.getEntitiesWithinAABBExcludingEntity(this,
+ 							this.dragonPartWing2.getEntityBoundingBox()
+-								.expand(4.0D, 2.0D, 4.0D).offset(0.0D, -2.0D,
+-									0.0D)));
++								.expand(4.0D, 2.0D, 4.0D)
++								.offset(0.0D, -2.0D, 0.0D)));
+ 					this.attackEntitiesInList(
+ 						this.world.getEntitiesWithinAABBExcludingEntity(this,
+ 							this.dragonPartHead.getEntityBoundingBox()
+diff --git a/net/minecraft/entity/boss/dragon/phase/PhaseStrafePlayer.java b/net/minecraft/entity/boss/dragon/phase/PhaseStrafePlayer.java
+index b370b91..6c7fea4 100644
+--- a/net/minecraft/entity/boss/dragon/phase/PhaseStrafePlayer.java
++++ b/net/minecraft/entity/boss/dragon/phase/PhaseStrafePlayer.java
+@@ -75,7 +75,8 @@ public class PhaseStrafePlayer extends PhaseBase
+ 						(new Vec3d(this.attackTarget.posX - this.dragon.posX,
+ 							0.0D, this.attackTarget.posZ - this.dragon.posZ))
+ 								.normalize();
+-					Vec3d vec3d = (new Vec3d(
++					Vec3d vec3d =
++						(new Vec3d(
+ 							(double)MathHelper
+ 								.sin(this.dragon.rotationYaw * 0.017453292F),
+ 							0.0D,
+diff --git a/net/minecraft/entity/item/EntityBoat.java b/net/minecraft/entity/item/EntityBoat.java
+index f189be8..25304c4 100644
+--- a/net/minecraft/entity/item/EntityBoat.java
++++ b/net/minecraft/entity/item/EntityBoat.java
+@@ -480,8 +480,10 @@ public class EntityBoat extends Entity
+ 	
+ 	public float getRowingTime(int p_184448_1_, float limbSwing)
+ 	{
+-		return this.getPaddleState(p_184448_1_) ? (float)MathHelper.clampedLerp(
+-			(double)this.paddlePositions[p_184448_1_] - 0.39269909262657166D,
++		return this.getPaddleState(p_184448_1_)
++			? (float)MathHelper.clampedLerp(
++				(double)this.paddlePositions[p_184448_1_]
++					- 0.39269909262657166D,
+ 				(double)this.paddlePositions[p_184448_1_], (double)limbSwing)
+ 			: 0.0F;
+ 	}
+diff --git a/net/minecraft/entity/item/EntityEnderEye.java b/net/minecraft/entity/item/EntityEnderEye.java
+index 589b055..9cf47f1 100644
+--- a/net/minecraft/entity/item/EntityEnderEye.java
++++ b/net/minecraft/entity/item/EntityEnderEye.java
+@@ -119,9 +119,8 @@ public class EntityEnderEye extends Entity
+ 		this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ)
+ 			* (180D / Math.PI));
+ 		
+-		for(this.rotationPitch =
+-			(float)(MathHelper.atan2(this.motionY, (double)f)
+-				* (180D / Math.PI)); this.rotationPitch
++		for(this.rotationPitch = (float)(MathHelper.atan2(this.motionY,
++			(double)f) * (180D / Math.PI)); this.rotationPitch
+ 				- this.prevRotationPitch < -180.0F; this.prevRotationPitch -=
+ 					360.0F)
+ 		{
+diff --git a/net/minecraft/entity/item/EntityFireworkRocket.java b/net/minecraft/entity/item/EntityFireworkRocket.java
+index 3a7e3fe..4059f67 100644
+--- a/net/minecraft/entity/item/EntityFireworkRocket.java
++++ b/net/minecraft/entity/item/EntityFireworkRocket.java
+@@ -182,9 +182,8 @@ public class EntityFireworkRocket extends Entity
+ 		this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ)
+ 			* (180D / Math.PI));
+ 		
+-		for(this.rotationPitch =
+-			(float)(MathHelper.atan2(this.motionY, (double)f)
+-				* (180D / Math.PI)); this.rotationPitch
++		for(this.rotationPitch = (float)(MathHelper.atan2(this.motionY,
++			(double)f) * (180D / Math.PI)); this.rotationPitch
+ 				- this.prevRotationPitch < -180.0F; this.prevRotationPitch -=
+ 					360.0F)
+ 		{
 diff --git a/net/minecraft/entity/item/EntityMinecart.java b/net/minecraft/entity/item/EntityMinecart.java
-index e1a5ff9..7c75d03 100644
+index e1a5ff9..9ca671c 100644
 --- a/net/minecraft/entity/item/EntityMinecart.java
 +++ b/net/minecraft/entity/item/EntityMinecart.java
 @@ -592,7 +592,7 @@ public abstract class EntityMinecart extends Entity implements IWorldNameable
@@ -3692,6 +4087,56 @@ index e1a5ff9..7c75d03 100644
  			
  			if(d6 > 0.0D)
  			{
+@@ -1000,7 +1000,8 @@ public abstract class EntityMinecart extends Entity implements IWorldNameable
+ 							double d4 = entityIn.posX - this.posX;
+ 							double d5 = entityIn.posZ - this.posZ;
+ 							Vec3d vec3d = (new Vec3d(d4, 0.0D, d5)).normalize();
+-							Vec3d vec3d1 = (new Vec3d(
++							Vec3d vec3d1 =
++								(new Vec3d(
+ 									(double)MathHelper
+ 										.cos(this.rotationYaw * 0.017453292F),
+ 									0.0D,
+diff --git a/net/minecraft/entity/monster/EntityEnderman.java b/net/minecraft/entity/monster/EntityEnderman.java
+index 94296a2..4470159 100644
+--- a/net/minecraft/entity/monster/EntityEnderman.java
++++ b/net/minecraft/entity/monster/EntityEnderman.java
+@@ -662,13 +662,10 @@ public class EntityEnderman extends EntityMob
+ 			BlockPos blockpos = new BlockPos(i, j, k);
+ 			IBlockState iblockstate = world.getBlockState(blockpos);
+ 			Block block = iblockstate.getBlock();
+-			RayTraceResult raytraceresult = world.rayTraceBlocks(
+-				new Vec3d(
+-					(double)((float)MathHelper.floor(this.enderman.posX)
+-						+ 0.5F),
++			RayTraceResult raytraceresult = world.rayTraceBlocks(new Vec3d(
++				(double)((float)MathHelper.floor(this.enderman.posX) + 0.5F),
+ 				(double)((float)j + 0.5F),
+-					(double)((float)MathHelper.floor(this.enderman.posZ)
+-						+ 0.5F)),
++				(double)((float)MathHelper.floor(this.enderman.posZ) + 0.5F)),
+ 				new Vec3d((double)((float)i + 0.5F), (double)((float)j + 0.5F),
+ 					(double)((float)k + 0.5F)),
+ 				false, true, false);
+diff --git a/net/minecraft/entity/monster/EntityGuardian.java b/net/minecraft/entity/monster/EntityGuardian.java
+index c445fa7..2fb6faa 100644
+--- a/net/minecraft/entity/monster/EntityGuardian.java
++++ b/net/minecraft/entity/monster/EntityGuardian.java
+@@ -292,12 +292,10 @@ public class EntityGuardian extends EntityMob
+ 				
+ 				for(int i = 0; i < 2; ++i)
+ 				{
+-					this.world
+-						.spawnParticle(EnumParticleTypes.WATER_BUBBLE,
++					this.world.spawnParticle(EnumParticleTypes.WATER_BUBBLE,
+ 						this.posX + (this.rand.nextDouble() - 0.5D)
+ 							* (double)this.width - vec3d.xCoord * 1.5D,
+-							this.posY
+-								+ this.rand.nextDouble() * (double)this.height
++						this.posY + this.rand.nextDouble() * (double)this.height
+ 							- vec3d.yCoord * 1.5D,
+ 						this.posZ + (this.rand.nextDouble() - 0.5D)
+ 							* (double)this.width - vec3d.zCoord * 1.5D,
 diff --git a/net/minecraft/entity/monster/EntitySlime.java b/net/minecraft/entity/monster/EntitySlime.java
 index 15a9b0b..d053b7f 100644
 --- a/net/minecraft/entity/monster/EntitySlime.java
@@ -3731,6 +4176,32 @@ index 2d40daa..84480bc 100644
  			this.rotationYaw += f1;
  			
  			if(this.rand.nextInt(100) == 0
+diff --git a/net/minecraft/entity/passive/EntityVillager.java b/net/minecraft/entity/passive/EntityVillager.java
+index b24f0c7..22ff198 100644
+--- a/net/minecraft/entity/passive/EntityVillager.java
++++ b/net/minecraft/entity/passive/EntityVillager.java
+@@ -131,8 +131,8 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant
+ 						new EntityVillager.PriceInfo(-7, -5))},
+ 				{new EntityVillager.ListItemForEmeralds(
+ 					Items.COOKIE, new EntityVillager.PriceInfo(-10, -6)),
+-					new EntityVillager.ListItemForEmeralds(
+-						Items.CAKE, new EntityVillager.PriceInfo(1, 1))}},
++					new EntityVillager.ListItemForEmeralds(Items.CAKE,
++						new EntityVillager.PriceInfo(1, 1))}},
+ 				{{new EntityVillager.EmeraldForItems(Items.STRING,
+ 					new EntityVillager.PriceInfo(15, 20)),
+ 					new EntityVillager.EmeraldForItems(Items.COAL,
+@@ -223,8 +223,8 @@ public class EntityVillager extends EntityAgeable implements INpc, IMerchant
+ 							new EntityVillager.PriceInfo(6, 10))}}},
+ 			{{{new EntityVillager.EmeraldForItems(Items.PAPER,
+ 				new EntityVillager.PriceInfo(24, 36)),
+-				new EntityVillager.ListEnchantedBookForEmeralds()}, {
+-					new EntityVillager.EmeraldForItems(Items.BOOK,
++				new EntityVillager.ListEnchantedBookForEmeralds()},
++				{new EntityVillager.EmeraldForItems(Items.BOOK,
+ 					new EntityVillager.PriceInfo(8, 10)),
+ 					new EntityVillager.ListItemForEmeralds(Items.COMPASS,
+ 						new EntityVillager.PriceInfo(10, 12)),
 diff --git a/net/minecraft/entity/player/EntityPlayer.java b/net/minecraft/entity/player/EntityPlayer.java
 index da5433b..a7a9cce 100644
 --- a/net/minecraft/entity/player/EntityPlayer.java
@@ -3796,6 +4267,101 @@ index b272953..8014b97 100644
  			}
  			
  			this.isJumping = jumping;
+diff --git a/net/minecraft/entity/projectile/EntityArrow.java b/net/minecraft/entity/projectile/EntityArrow.java
+index 0c4963a..a4b5458 100644
+--- a/net/minecraft/entity/projectile/EntityArrow.java
++++ b/net/minecraft/entity/projectile/EntityArrow.java
+@@ -344,9 +344,8 @@ public abstract class EntityArrow extends Entity implements IProjectile
+ 				(float)(MathHelper.atan2(this.motionX, this.motionZ)
+ 					* (180D / Math.PI));
+ 			
+-			for(this.rotationPitch =
+-				(float)(MathHelper.atan2(this.motionY, (double)f4)
+-					* (180D / Math.PI)); this.rotationPitch
++			for(this.rotationPitch = (float)(MathHelper.atan2(this.motionY,
++				(double)f4) * (180D / Math.PI)); this.rotationPitch
+ 					- this.prevRotationPitch < -180.0F; this.prevRotationPitch -=
+ 						360.0F)
+ 			{
+diff --git a/net/minecraft/entity/projectile/EntityDragonFireball.java b/net/minecraft/entity/projectile/EntityDragonFireball.java
+index 3235178..3e4f7b7 100644
+--- a/net/minecraft/entity/projectile/EntityDragonFireball.java
++++ b/net/minecraft/entity/projectile/EntityDragonFireball.java
+@@ -52,8 +52,8 @@ public class EntityDragonFireball extends EntityFireball
+ 			{
+ 				List<EntityLivingBase> list =
+ 					this.world.<EntityLivingBase> getEntitiesWithinAABB(
+-						EntityLivingBase.class, this.getEntityBoundingBox()
+-							.expand(4.0D, 2.0D, 4.0D));
++						EntityLivingBase.class,
++						this.getEntityBoundingBox().expand(4.0D, 2.0D, 4.0D));
+ 				EntityAreaEffectCloud entityareaeffectcloud =
+ 					new EntityAreaEffectCloud(this.world, this.posX, this.posY,
+ 						this.posZ);
+diff --git a/net/minecraft/entity/projectile/EntityFishHook.java b/net/minecraft/entity/projectile/EntityFishHook.java
+index ac0acef..d6cc0bb 100644
+--- a/net/minecraft/entity/projectile/EntityFishHook.java
++++ b/net/minecraft/entity/projectile/EntityFishHook.java
+@@ -315,9 +315,8 @@ public class EntityFishHook extends Entity
+ 		this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ)
+ 			* (180D / Math.PI));
+ 		
+-		for(this.rotationPitch =
+-			(float)(MathHelper.atan2(this.motionY, (double)f)
+-				* (180D / Math.PI)); this.rotationPitch
++		for(this.rotationPitch = (float)(MathHelper.atan2(this.motionY,
++			(double)f) * (180D / Math.PI)); this.rotationPitch
+ 				- this.prevRotationPitch < -180.0F; this.prevRotationPitch -=
+ 					360.0F)
+ 		{
+diff --git a/net/minecraft/entity/projectile/EntityLlamaSpit.java b/net/minecraft/entity/projectile/EntityLlamaSpit.java
+index 32863a2..fb3e5e3 100644
+--- a/net/minecraft/entity/projectile/EntityLlamaSpit.java
++++ b/net/minecraft/entity/projectile/EntityLlamaSpit.java
+@@ -111,9 +111,8 @@ public class EntityLlamaSpit extends Entity implements IProjectile
+ 		this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ)
+ 			* (180D / Math.PI));
+ 		
+-		for(this.rotationPitch =
+-			(float)(MathHelper.atan2(this.motionY, (double)f)
+-				* (180D / Math.PI)); this.rotationPitch
++		for(this.rotationPitch = (float)(MathHelper.atan2(this.motionY,
++			(double)f) * (180D / Math.PI)); this.rotationPitch
+ 				- this.prevRotationPitch < -180.0F; this.prevRotationPitch -=
+ 					360.0F)
+ 		{
+diff --git a/net/minecraft/entity/projectile/EntityThrowable.java b/net/minecraft/entity/projectile/EntityThrowable.java
+index bc20599..49140c5 100644
+--- a/net/minecraft/entity/projectile/EntityThrowable.java
++++ b/net/minecraft/entity/projectile/EntityThrowable.java
+@@ -300,9 +300,8 @@ public abstract class EntityThrowable extends Entity implements IProjectile
+ 		this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ)
+ 			* (180D / Math.PI));
+ 		
+-		for(this.rotationPitch =
+-			(float)(MathHelper.atan2(this.motionY, (double)f)
+-				* (180D / Math.PI)); this.rotationPitch
++		for(this.rotationPitch = (float)(MathHelper.atan2(this.motionY,
++			(double)f) * (180D / Math.PI)); this.rotationPitch
+ 				- this.prevRotationPitch < -180.0F; this.prevRotationPitch -=
+ 					360.0F)
+ 		{
+diff --git a/net/minecraft/entity/projectile/ProjectileHelper.java b/net/minecraft/entity/projectile/ProjectileHelper.java
+index c3682f2..e5a7c79 100644
+--- a/net/minecraft/entity/projectile/ProjectileHelper.java
++++ b/net/minecraft/entity/projectile/ProjectileHelper.java
+@@ -86,9 +86,8 @@ public final class ProjectileHelper
+ 		p_188803_0_.rotationYaw =
+ 			(float)(MathHelper.atan2(d2, d0) * (180D / Math.PI)) + 90.0F;
+ 		
+-		for(p_188803_0_.rotationPitch =
+-			(float)(MathHelper.atan2((double)f, d1) * (180D / Math.PI))
+-				- 90.0F; p_188803_0_.rotationPitch
++		for(p_188803_0_.rotationPitch = (float)(MathHelper.atan2((double)f, d1)
++			* (180D / Math.PI)) - 90.0F; p_188803_0_.rotationPitch
+ 				- p_188803_0_.prevRotationPitch < -180.0F; p_188803_0_.prevRotationPitch -=
+ 					360.0F)
+ 		{
 diff --git a/net/minecraft/item/ItemSword.java b/net/minecraft/item/ItemSword.java
 index 9174c9b..705de47 100644
 --- a/net/minecraft/item/ItemSword.java
@@ -3910,7 +4476,7 @@ index 60be433..b5bb18c 100644
  				CPacketPlayerAbilities.class);
  			this.registerPacket(EnumPacketDirection.SERVERBOUND,
 diff --git a/net/minecraft/network/NetworkManager.java b/net/minecraft/network/NetworkManager.java
-index 44dec30..850abeb 100644
+index 44dec30..0100b94 100644
 --- a/net/minecraft/network/NetworkManager.java
 +++ b/net/minecraft/network/NetworkManager.java
 @@ -39,6 +39,8 @@ import net.minecraft.util.ITickable;
@@ -3930,11 +4496,11 @@ index 44dec30..850abeb 100644
 +			// TODO: Client
 +		}else if(p_exceptionCaught_2_ instanceof NullPointerException)
 +		{
-+			textcomponenttranslation =
-+				new TextComponentTranslation("disconnect.genericReason",
-+					"§c[§6Wurst§c]§r\n"
-+						+ "You are using a §ocracked§r alt on a §opremium§r server.\n"
-+						+ "§cDon't do that!");
++			textcomponenttranslation = new TextComponentTranslation(
++				"disconnect.genericReason",
++				"§c[§6Wurst§c]§r\n"
++					+ "You are using a §ocracked§r alt on a §opremium§r server.\n"
++					+ "§cDon't do that!");
 +			
  		}else
  		{
@@ -3974,6 +4540,21 @@ index ac9fc2d..fc1ae57 100644
  	/**
  	 * Updates the specified chunk with the supplied data, marks it for
  	 * re-rendering and lighting recalculation
+diff --git a/net/minecraft/potion/Potion.java b/net/minecraft/potion/Potion.java
+index 95fe731..c164bee 100644
+--- a/net/minecraft/potion/Potion.java
++++ b/net/minecraft/potion/Potion.java
+@@ -498,8 +498,8 @@ public class Potion
+ 					"03C3C89D-7037-4B42-869F-B146BCB64D2E", 1.0D, 0));
+ 		REGISTRY.register(27, new ResourceLocation("unluck"),
+ 			(new Potion(true, 12624973)).setPotionName("effect.unluck")
+-				.setIconIndex(6, 2).registerPotionAttributeModifier(
+-					SharedMonsterAttributes.LUCK,
++				.setIconIndex(6, 2)
++				.registerPotionAttributeModifier(SharedMonsterAttributes.LUCK,
+ 					"CC5AF142-2BD2-4215-B636-2605AED11727", -1.0D, 0));
+ 	}
+ }
 diff --git a/net/minecraft/potion/PotionEffect.java b/net/minecraft/potion/PotionEffect.java
 index bbd9801..2aedf02 100644
 --- a/net/minecraft/potion/PotionEffect.java
@@ -4010,6 +4591,95 @@ index c0d111b..0cbcd25 100644
  			p_render_2_, p_render_3_);
  	}
  	
+diff --git a/net/minecraft/realms/RealmsSharedConstants.java b/net/minecraft/realms/RealmsSharedConstants.java
+index 4bd994c..fbbfa2c 100644
+--- a/net/minecraft/realms/RealmsSharedConstants.java
++++ b/net/minecraft/realms/RealmsSharedConstants.java
+@@ -4,9 +4,9 @@ import net.minecraft.util.ChatAllowedCharacters;
+ 
+ public class RealmsSharedConstants
+ {
+-	public static int NETWORK_PROTOCOL_VERSION = 335;
++	public static int NETWORK_PROTOCOL_VERSION = 340;
+ 	public static int TICKS_PER_SECOND = 20;
+-	public static String VERSION_STRING = "1.12";
++	public static String VERSION_STRING = "1.12.2";
+ 	public static char[] ILLEGAL_FILE_CHARACTERS =
+ 		ChatAllowedCharacters.ILLEGAL_FILE_CHARACTERS;
+ }
+diff --git a/net/minecraft/src/ConnectedTextures.java b/net/minecraft/src/ConnectedTextures.java
+index 24db4cb..6c11a11 100644
+--- a/net/minecraft/src/ConnectedTextures.java
++++ b/net/minecraft/src/ConnectedTextures.java
+@@ -1096,8 +1096,7 @@ public class ConnectedTextures
+ 						
+ 						if(aboolean1[3])
+ 						{
+-							listquadsoverlay.addQuad(
+-								getQuadFull(
++							listquadsoverlay.addQuad(getQuadFull(
+ 								p_getConnectedTextureOverlay_0_.tileIcons[16],
+ 								p_getConnectedTextureOverlay_6_,
+ 								p_getConnectedTextureOverlay_0_.tintIndex),
+@@ -1119,8 +1118,7 @@ public class ConnectedTextures
+ 						
+ 						if(aboolean1[2])
+ 						{
+-							listquadsoverlay.addQuad(
+-								getQuadFull(
++							listquadsoverlay.addQuad(getQuadFull(
+ 								p_getConnectedTextureOverlay_0_.tileIcons[14],
+ 								p_getConnectedTextureOverlay_6_,
+ 								p_getConnectedTextureOverlay_0_.tintIndex),
+@@ -1142,8 +1140,7 @@ public class ConnectedTextures
+ 						
+ 						if(aboolean1[1])
+ 						{
+-							listquadsoverlay.addQuad(
+-								getQuadFull(
++							listquadsoverlay.addQuad(getQuadFull(
+ 								p_getConnectedTextureOverlay_0_.tileIcons[2],
+ 								p_getConnectedTextureOverlay_6_,
+ 								p_getConnectedTextureOverlay_0_.tintIndex),
+@@ -1165,8 +1162,7 @@ public class ConnectedTextures
+ 						
+ 						if(aboolean1[0])
+ 						{
+-							listquadsoverlay.addQuad(
+-								getQuadFull(
++							listquadsoverlay.addQuad(getQuadFull(
+ 								p_getConnectedTextureOverlay_0_.tileIcons[0],
+ 								p_getConnectedTextureOverlay_6_,
+ 								p_getConnectedTextureOverlay_0_.tintIndex),
+diff --git a/net/minecraft/tileentity/BannerPattern.java b/net/minecraft/tileentity/BannerPattern.java
+index 82d6c61..f0f519b 100644
+--- a/net/minecraft/tileentity/BannerPattern.java
++++ b/net/minecraft/tileentity/BannerPattern.java
+@@ -47,7 +47,8 @@ public enum BannerPattern
+ 	GRADIENT_UP("gradient_up", "gru", " # ", " # ", "# #"),
+ 	BRICKS("bricks", "bri", new ItemStack(Blocks.BRICK_BLOCK)),
+ 	SKULL("skull", "sku", new ItemStack(Items.SKULL, 1, 1)),
+-	FLOWER("flower", "flo", new ItemStack(Blocks.RED_FLOWER, 1,
++	FLOWER("flower", "flo",
++		new ItemStack(Blocks.RED_FLOWER, 1,
+ 			BlockFlower.EnumFlowerType.OXEYE_DAISY.getMeta())),
+ 	MOJANG("mojang", "moj", new ItemStack(Items.GOLDEN_APPLE, 1, 1));
+ 	
+diff --git a/net/minecraft/tileentity/TileEntityBeacon.java b/net/minecraft/tileentity/TileEntityBeacon.java
+index 68000b2..ba1d0e5 100644
+--- a/net/minecraft/tileentity/TileEntityBeacon.java
++++ b/net/minecraft/tileentity/TileEntityBeacon.java
+@@ -105,8 +105,8 @@ public class TileEntityBeacon extends TileEntityLockable
+ 			AxisAlignedBB axisalignedbb =
+ 				(new AxisAlignedBB((double)k, (double)l, (double)i1,
+ 					(double)(k + 1), (double)(l + 1), (double)(i1 + 1)))
+-						.expandXyz(d0).addCoord(0.0D,
+-							(double)this.world.getHeight(), 0.0D);
++						.expandXyz(d0)
++						.addCoord(0.0D, (double)this.world.getHeight(), 0.0D);
+ 			List<EntityPlayer> list =
+ 				this.world.<EntityPlayer> getEntitiesWithinAABB(
+ 					EntityPlayer.class, axisalignedbb);
 diff --git a/net/minecraft/tileentity/TileEntitySign.java b/net/minecraft/tileentity/TileEntitySign.java
 index 9314f73..9b5dd59 100644
 --- a/net/minecraft/tileentity/TileEntitySign.java
@@ -4192,6 +4862,44 @@ index 4b65d21..af287b8 100644
  		return this.prevRainingStrength
  			+ (this.rainingStrength - this.prevRainingStrength) * delta;
  	}
+diff --git a/net/minecraft/world/end/DragonFightManager.java b/net/minecraft/world/end/DragonFightManager.java
+index 2f8c7fe..8205adc 100644
+--- a/net/minecraft/world/end/DragonFightManager.java
++++ b/net/minecraft/world/end/DragonFightManager.java
+@@ -610,8 +610,8 @@ public class DragonFightManager
+ 	{
+ 		if(this.dragonKilled && this.respawnState == null)
+ 		{
+-			for(BlockPattern.PatternHelper blockpattern$patternhelper =
+-				this.findExitPortal(); blockpattern$patternhelper != null; blockpattern$patternhelper =
++			for(BlockPattern.PatternHelper blockpattern$patternhelper = this
++				.findExitPortal(); blockpattern$patternhelper != null; blockpattern$patternhelper =
+ 					this.findExitPortal())
+ 			{
+ 				for(int i = 0; i < this.portalPattern.getPalmLength(); ++i)
+diff --git a/net/minecraft/world/gen/structure/MapGenStronghold.java b/net/minecraft/world/gen/structure/MapGenStronghold.java
+index 19e5d70..49bc34d 100644
+--- a/net/minecraft/world/gen/structure/MapGenStronghold.java
++++ b/net/minecraft/world/gen/structure/MapGenStronghold.java
+@@ -192,14 +192,14 @@ public class MapGenStronghold extends MapGenStructure
+ 	{
+ 		MapGenStronghold.Start mapgenstronghold$start;
+ 		
+-		for(mapgenstronghold$start =
+-			new MapGenStronghold.Start(this.worldObj, this.rand, chunkX,
++		for(mapgenstronghold$start = new MapGenStronghold.Start(this.worldObj,
++			this.rand, chunkX,
+ 			chunkZ); mapgenstronghold$start.getComponents().isEmpty()
+ 				|| ((StructureStrongholdPieces.Stairs2)mapgenstronghold$start
+ 					.getComponents().get(
+ 						0)).strongholdPortalRoom == null; mapgenstronghold$start =
+-								new MapGenStronghold.Start(this.worldObj,
+-									this.rand, chunkX, chunkZ))
++							new MapGenStronghold.Start(this.worldObj, this.rand,
++								chunkX, chunkZ))
+ 		{
+ 			;
+ 		}
 diff --git a/shadersmod/client/GuiSlotShaders.java b/shadersmod/client/GuiSlotShaders.java
 index e47a8c4..6463f61 100644
 --- a/shadersmod/client/GuiSlotShaders.java
