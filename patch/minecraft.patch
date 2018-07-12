@@ -1,6 +1,6 @@
-From cba33b7891573d798ed821fb2d5fa6d71940319e Mon Sep 17 00:00:00 2001
+From f4b75e692e1650cbcf09cf2105e68fd7965ccf20 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Sun, 17 Jun 2018 09:36:24 +0200
+Date: Thu, 12 Jul 2018 16:28:37 +0200
 Subject: [PATCH] mod
 
 ---
@@ -116,6 +116,7 @@ Subject: [PATCH] mod
  net/minecraft/realms/RealmsButton.java             |   2 +-
  net/minecraft/realms/RealmsSharedConstants.java    |   4 +-
  net/minecraft/src/ConnectedTextures.java           |  12 +-
+ net/minecraft/src/ListQuadsOverlay.java            |   6 +-
  net/minecraft/tileentity/BannerPattern.java        |   3 +-
  net/minecraft/tileentity/TileEntityBeacon.java     |   4 +-
  net/minecraft/tileentity/TileEntitySign.java       |   2 +-
@@ -127,7 +128,7 @@ Subject: [PATCH] mod
  net/minecraft/world/end/DragonFightManager.java    |   4 +-
  .../world/gen/structure/MapGenStronghold.java      |   8 +-
  shadersmod/client/GuiSlotShaders.java              |   2 +-
- 123 files changed, 1349 insertions(+), 446 deletions(-)
+ 124 files changed, 1354 insertions(+), 447 deletions(-)
 
 diff --git a/net/minecraft/block/Block.java b/net/minecraft/block/Block.java
 index 7e18f72..45f2cdc 100644
@@ -4687,6 +4688,23 @@ index 24db4cb..6c11a11 100644
  								p_getConnectedTextureOverlay_0_.tileIcons[0],
  								p_getConnectedTextureOverlay_6_,
  								p_getConnectedTextureOverlay_0_.tintIndex),
+diff --git a/net/minecraft/src/ListQuadsOverlay.java b/net/minecraft/src/ListQuadsOverlay.java
+index 9fd53e3..5ef30c1 100644
+--- a/net/minecraft/src/ListQuadsOverlay.java
++++ b/net/minecraft/src/ListQuadsOverlay.java
+@@ -12,7 +12,11 @@ public class ListQuadsOverlay
+ {
+ 	private List<BakedQuad> listQuads = new ArrayList<BakedQuad>();
+ 	private List<IBlockState> listBlockStates = new ArrayList<IBlockState>();
+-	private List<BakedQuad> listQuadsSingle = Arrays.<BakedQuad> asList();
++	
++	// TODO: Client
++	// OptiFine crash fix
++	private List<BakedQuad> listQuadsSingle =
++		Arrays.<BakedQuad> asList(new BakedQuad[1]);
+ 	
+ 	public void addQuad(BakedQuad p_addQuad_1_, IBlockState p_addQuad_2_)
+ 	{
 diff --git a/net/minecraft/tileentity/BannerPattern.java b/net/minecraft/tileentity/BannerPattern.java
 index 82d6c61..f0f519b 100644
 --- a/net/minecraft/tileentity/BannerPattern.java
