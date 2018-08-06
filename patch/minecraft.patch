@@ -1,6 +1,6 @@
-From 87f3cc9742ada681612550e9bd02cd304685352d Mon Sep 17 00:00:00 2001
+From b5592ecc716599121db82422bcd553be46ff2927 Mon Sep 17 00:00:00 2001
 From: Alexander01998 <contact.wurstimperium@gmail.com>
-Date: Sat, 4 Aug 2018 14:10:19 +0200
+Date: Mon, 6 Aug 2018 19:19:22 +0200
 Subject: [PATCH] mod
 
 ---
@@ -124,7 +124,7 @@ Subject: [PATCH] mod
  net/minecraft/item/ItemSword.java             |   2 +-
  net/minecraft/item/ItemTool.java              |   2 +-
  .../network/EnumConnectionState.java          |  35 +++
- net/minecraft/network/NetworkManager.java     |  18 ++
+ net/minecraft/network/NetworkManager.java     |  15 ++
  .../network/play/INetHandlerPlayClient.java   |   4 +
  .../play/server/SPacketCombatEvent.java       |   2 +-
  net/minecraft/potion/Potion.java              |   4 +-
@@ -147,7 +147,7 @@ Subject: [PATCH] mod
  .../StructureNetherBridgePieces.java          |   2 +-
  .../structure/StructureStrongholdPieces.java  |   2 +-
  shadersmod/client/GuiSlotShaders.java         |   2 +-
- 143 files changed, 1383 insertions(+), 476 deletions(-)
+ 143 files changed, 1380 insertions(+), 476 deletions(-)
 
 diff --git a/net/minecraft/block/Block.java b/net/minecraft/block/Block.java
 index 7e18f72..45f2cdc 100644
@@ -4807,19 +4807,18 @@ index 60be433..b5bb18c 100644
  				CPacketPlayerAbilities.class);
  			this.registerPacket(EnumPacketDirection.SERVERBOUND,
 diff --git a/net/minecraft/network/NetworkManager.java b/net/minecraft/network/NetworkManager.java
-index 44dec30..0100b94 100644
+index 44dec30..be95071 100644
 --- a/net/minecraft/network/NetworkManager.java
 +++ b/net/minecraft/network/NetworkManager.java
-@@ -39,6 +39,8 @@ import net.minecraft.util.ITickable;
+@@ -39,6 +39,7 @@ import net.minecraft.util.ITickable;
  import net.minecraft.util.LazyLoadBase;
  import net.minecraft.util.text.ITextComponent;
  import net.minecraft.util.text.TextComponentTranslation;
-+import net.wurstclient.WurstClient;
-+import net.wurstclient.events.PacketInputListener.PacketInputEvent;
++import net.wurstclient.event.EventFactory;
  
  public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>>
  {
-@@ -150,6 +152,16 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>>
+@@ -150,6 +151,16 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>>
  		{
  			textcomponenttranslation = new TextComponentTranslation(
  				"disconnect.timeout", new Object[0]);
@@ -4836,14 +4835,12 @@ index 44dec30..0100b94 100644
  		}else
  		{
  			textcomponenttranslation = new TextComponentTranslation(
-@@ -167,6 +179,12 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>>
+@@ -167,6 +178,10 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet<?>>
  	{
  		if(this.channel.isOpen())
  		{
 +			// TODO: Client
-+			PacketInputEvent event = new PacketInputEvent(p_channelRead0_2_);
-+			WurstClient.INSTANCE.events.fire(event);
-+			if(event.isCancelled())
++			if(!EventFactory.onReceivePacket(p_channelRead0_2_))
 +				return;
 +			
  			try
